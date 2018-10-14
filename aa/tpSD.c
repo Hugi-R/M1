@@ -1,10 +1,11 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 
 /* Basic heap macros */
-#define h_parent(i) (i/2)
-#define h_left(i) (2*i)
-#define h_right(i) (2*i+1)
+#define h_parent(i) ((i-1)/2)
+#define h_left(i) (2*i+1)
+#define h_right(i) (2*i+2)
 
 void swap(int *a, int *b){
 	int tmp = *a;
@@ -55,21 +56,25 @@ void bubble_sort_k(int *data, int n, int k){
 	}
 }
 
-void heap_percolateUp(Heap *heap, int x){
-	int i = x;
+void heap_percolateUp(Heap *heap, int i){
+	//printf("i=%d i/2=%d\n", i, i/2);
 	int j = h_parent(i);
-	while(j > 0 && heap->data[j] < heap->data[i]){
+	//print_data(heap->data, heap->length);
+	//printf("0 i=%d j=%d datai=%d dataj=%d\n", i, j, heap->data[i], heap->data[j]);
+	while((j >= 0) && (heap->data[j] < heap->data[i])){
 		swap(heap->data+i, heap->data+j);
 		i = j;
 		j = h_parent(i);
+		//print_data(heap->data, heap->length);
+		//printf("1 i=%d j=%d datai=%d dataj=%d\n", i, j, (heap->data)[i], (heap->data)[j]);
 	}
 }
 
 void heap_add(Heap *heap, int e){
 	if(heap->size < heap->length){
 		heap->size += 1;
-		heap->data[heap->size] = e;
-		heap_percolateUp(heap, heap->size);
+		(heap->data)[heap->size-1] = e;
+		heap_percolateUp(heap, heap->size-1);
 	}
 }
 
@@ -101,24 +106,27 @@ int heap_remove(Heap *heap){
 }
 
 void print_greater_k_heap(int *data, int n, int k){
-	int *res = (int*) malloc(k*sizeof(int));
 	Heap heap = {data, n, n};
 	heap_buildHeap(&heap);
-	for (int i = 0; i < k; ++i)
-		res[i] = heap_remove(&heap);
-	print_data(res, k);
-	free(res);
+	for(int i = 0; i < k; ++i){
+		printf("%d ", heap_remove(&heap));
+	}
+	printf("\n");
 }
 
 void print_greater_k_heap_add(int *data, int n, int k){
 	int *heap_data = (int*) malloc((n+5)*sizeof(int));
 	Heap heap = {heap_data, n+5, 0};
 	for(int i = 0; i < n; ++i){
+		//print_data(heap.data, heap.length);
 		heap_add(&heap, data[i]);
+		//print_data(heap.data, heap.length);
 	}
 	for(int i = 0; i < k; ++i){
-		//TODO
+		printf("%d ", heap_remove(&heap));
 	}
+	printf("\n");
+	free(heap_data);
 }
 
 void print_greater_k(int *data, int n, int k, int method){
@@ -132,6 +140,10 @@ void print_greater_k(int *data, int n, int k, int method){
 			printf("\nMethod 2 : binary heap\n");
 			print_greater_k_heap(data, n, k);
 			break;
+		case 3:
+			printf("\nMethod 3 : binary heap with add\n");
+			print_greater_k_heap_add(data, n, k);
+			break;
 		default :
 			printf("Unknow method\n");
 	}
@@ -141,10 +153,16 @@ int main( int argc, char **argv ) {
 	int *data;
 	int n, k;
 	FILE *f_in;
+	int method;
 
-	if ( argc > 1 )
+	if ( argc > 1 ){
 		f_in = fopen(argv[1], "r");
-	else
+		if(argc > 2){
+			method = atoi(argv[2]);
+		} else {
+			method = 1;
+		}
+	}else
 		f_in = stdin;
 
 	/* lecture des donnees */
@@ -157,8 +175,13 @@ int main( int argc, char **argv ) {
 
 	/* output result. */
 	//print_greater_k(data, n, k, 1);
-    print_greater_k(data, n, k, 2);
-
+	clock_t duree = clock();
+	printf("t=%ld\n", duree);
+    print_greater_k(data, n, k, method);
+	duree = clock() - duree;
+	printf("t=%ld\n", clock());
+	//double duree_ms = duree/(double)CLOCKS_PER_SEC*1000;
+	printf("done in %ldns\n", duree) ;
 
 	 free(data);
 	return 0;
