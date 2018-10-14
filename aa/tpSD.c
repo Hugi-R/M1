@@ -129,6 +129,15 @@ void print_greater_k_heap_add(int *data, int n, int k){
 	free(heap_data);
 }
 
+int lt (const void * a, const void * b){
+	return ( *(int*)a - *(int*)b );
+}
+ 
+void print_greater_k_qsort(int *data, int n, int k){
+	qsort(data, n, sizeof(int), lt);
+	print_data(data, k);
+}
+
 void print_greater_k(int *data, int n, int k, int method){
 	switch(method){
 		case 1 :
@@ -143,6 +152,10 @@ void print_greater_k(int *data, int n, int k, int method){
 		case 3:
 			printf("\nMethod 3 : binary heap with add\n");
 			print_greater_k_heap_add(data, n, k);
+			break;
+		case 4:
+			printf("\nMethod 4 : qsort\n");
+			print_greater_k_qsort(data, n, k);
 			break;
 		default :
 			printf("Unknow method\n");
@@ -176,12 +189,12 @@ int main( int argc, char **argv ) {
 	/* output result. */
 	//print_greater_k(data, n, k, 1);
 	clock_t duree = clock();
-	printf("t=%ld\n", duree);
+	//printf("t=%ld\n", duree);
     print_greater_k(data, n, k, method);
 	duree = clock() - duree;
-	printf("t=%ld\n", clock());
+	//printf("t=%ld\n", clock());
 	//double duree_ms = duree/(double)CLOCKS_PER_SEC*1000;
-	printf("done in %ldns\n", duree) ;
+	printf("done in %ldns (with printf)\n", duree) ;
 
 	 free(data);
 	return 0;
