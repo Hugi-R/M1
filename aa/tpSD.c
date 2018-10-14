@@ -135,7 +135,7 @@ int lt (const void * a, const void * b){
  
 void print_greater_k_qsort(int *data, int n, int k){
 	qsort(data, n, sizeof(int), lt);
-	print_data(data, k);
+	print_data_decrease(data, k);
 }
 
 void print_greater_k(int *data, int n, int k, int method){
