@@ -1,31 +1,27 @@
-M01_arretetoi.wav.csv detected as M05_decollage.wav.csv with a distance of 11.518786
-M01_atterrissage.wav.csv detected as M05_atterrissage.wav.csv with a distance of 16.777184
-M01_avance.wav.csv detected as M09_tournegauche.wav.csv with a distance of 12.047754
-M01_decollage.wav.csv detected as M05_atterrissage.wav.csv with a distance of 12.567226
-M01_droite.wav.csv detected as M09_tournegauche.wav.csv with a distance of 12.675529
-M01_etatdurgence.wav.csv detected as M05_decollage.wav.csv with a distance of 14.9348
-M01_faisunflip.wav.csv detected as M12_recule.wav.csv with a distance of 11.278138
-M01_gauche.wav.csv detected as M13_decollage.wav.csv with a distance of 17.279234
-M01_plusbas.wav.csv detected as M05_atterrissage.wav.csv with a distance of 12.76786
-M01_plushaut.wav.csv detected as M05_recule.wav.csv with a distance of 13.804407
-M01_recule.wav.csv detected as M05_decollage.wav.csv with a distance of 13.495093
-M01_tournedroite.wav.csv detected as M09_gauche.wav.csv with a distance of 11.047663
-M01_tournegauche.wav.csv detected as M05_decollage.wav.csv with a distance of 11.6968775
-{tournedroite={tournedroite=0, atterrissage=0, plushaut=0, droite=0, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=0, gauche=1, avance=0, recule=0, decollage=0, arretetoi=0}, atterrissage={tournedroite=0, atterrissage=1, plushaut=0, droite=0, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=0, gauche=0, avance=0, recule=0, decollage=0, arretetoi=0}, plushaut={tournedroite=0, atterrissage=0, plushaut=0, droite=0, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=0, gauche=0, avance=0, recule=1, decollage=0, arretetoi=0}, droite={tournedroite=0, atterrissage=0, plushaut=0, droite=0, etatdurgence=0, tournegauche=1, plusbas=0, faisunflip=0, gauche=0, avance=0, recule=0, decollage=0, arretetoi=0}, etatdurgence={tournedroite=0, atterrissage=0, plushaut=0, droite=0, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=0, gauche=0, avance=0, recule=0, decollage=1, arretetoi=0}, tournegauche={tournedroite=0, atterrissage=0, plushaut=0, droite=0, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=0, gauche=0, avance=0, recule=0, decollage=1, arretetoi=0}, plusbas={tournedroite=0, atterrissage=1, plushaut=0, droite=0, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=0, gauche=0, avance=0, recule=0, decollage=0, arretetoi=0}, faisunflip={tournedroite=0, atterrissage=0, plushaut=0, droite=0, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=0, gauche=0, avance=0, recule=1, decollage=0, arretetoi=0}, gauche={tournedroite=0, atterrissage=0, plushaut=0, droite=0, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=0, gauche=0, avance=0, recule=0, decollage=1, arretetoi=0}, avance={tournedroite=0, atterrissage=0, plushaut=0, droite=0, etatdurgence=0, tournegauche=1, plusbas=0, faisunflip=0, gauche=0, avance=0, recule=0, decollage=0, arretetoi=0}, recule={tournedroite=0, atterrissage=0, plushaut=0, droite=0, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=0, gauche=0, avance=0, recule=0, decollage=1, arretetoi=0}, decollage={tournedroite=0, atterrissage=1, plushaut=0, droite=0, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=0, gauche=0, avance=0, recule=0, decollage=0, arretetoi=0}, arretetoi={tournedroite=0, atterrissage=0, plushaut=0, droite=0, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=0, gauche=0, avance=0, recule=0, decollage=1, arretetoi=0}}
-| tournedroite | atterrissage | plushaut | droite | etatdurgence | tournegauche | plusbas | faisunflip | gauche | avance | recule | decollage | arretetoi | 
-tournedroite   	| 0 0 0 0 0 0 0 0 1 0 0 0 0 
-atterrissage   	| 0 1 0 0 0 0 0 0 0 0 0 0 0 
-plushaut   	| 0 0 0 0 0 0 0 0 0 0 1 0 0 
-droite   	| 0 0 0 0 0 1 0 0 0 0 0 0 0 
-etatdurgence   	| 0 0 0 0 0 0 0 0 0 0 0 1 0 
-tournegauche   	| 0 0 0 0 0 0 0 0 0 0 0 1 0 
-plusbas   	| 0 1 0 0 0 0 0 0 0 0 0 0 0 
-faisunflip   	| 0 0 0 0 0 0 0 0 0 0 1 0 0 
-gauche   	| 0 0 0 0 0 0 0 0 0 0 0 1 0 
-avance   	| 0 0 0 0 0 1 0 0 0 0 0 0 0 
-recule   	| 0 0 0 0 0 0 0 0 0 0 0 1 0 
-decollage   	| 0 1 0 0 0 0 0 0 0 0 0 0 0 
-arretetoi   	| 0 0 0 0 0 0 0 0 0 0 0 1 0 
+M01_arretetoi.wav.csv detected as M09_arretetoi.wav.csv with a distance of 22.74509
+M01_atterrissage.wav.csv detected as M05_atterrissage.wav.csv with a distance of 22.058563
+M01_avance.wav.csv detected as M09_avance.wav.csv with a distance of 23.475754
+M01_decollage.wav.csv detected as M13_decollage.wav.csv with a distance of 22.12741
+M01_droite.wav.csv detected as M05_droite.wav.csv with a distance of 23.290606
+M01_etatdurgence.wav.csv detected as M09_etatdurgence.wav.csv with a distance of 23.589703
+M01_faisunflip.wav.csv detected as M06_faisunflip.wav.csv with a distance of 19.438093
+M01_gauche.wav.csv detected as M05_gauche.wav.csv with a distance of 23.1211
+M01_plusbas.wav.csv detected as M05_plusbas.wav.csv with a distance of 21.040873
+M01_plushaut.wav.csv detected as M05_plushaut.wav.csv with a distance of 18.70398
+M01_recule.wav.csv detected as M05_recule.wav.csv with a distance of 21.246616
+{atterrissage={tournedroite=0, atterrissage=1, plushaut=0, droite=0, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=0, gauche=0, avance=0, recule=0, decollage=0, arretetoi=0}, plusbas={tournedroite=0, atterrissage=0, plushaut=0, droite=0, etatdurgence=0, tournegauche=0, plusbas=1, faisunflip=0, gauche=0, avance=0, recule=0, decollage=0, arretetoi=0}, plushaut={tournedroite=0, atterrissage=0, plushaut=1, droite=0, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=0, gauche=0, avance=0, recule=0, decollage=0, arretetoi=0}, faisunflip={tournedroite=0, atterrissage=0, plushaut=0, droite=0, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=1, gauche=0, avance=0, recule=0, decollage=0, arretetoi=0}, gauche={tournedroite=0, atterrissage=0, plushaut=0, droite=0, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=0, gauche=1, avance=0, recule=0, decollage=0, arretetoi=0}, avance={tournedroite=0, atterrissage=0, plushaut=0, droite=0, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=0, gauche=0, avance=1, recule=0, decollage=0, arretetoi=0}, droite={tournedroite=0, atterrissage=0, plushaut=0, droite=1, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=0, gauche=0, avance=0, recule=0, decollage=0, arretetoi=0}, recule={tournedroite=0, atterrissage=0, plushaut=0, droite=0, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=0, gauche=0, avance=0, recule=1, decollage=0, arretetoi=0}, decollage={tournedroite=0, atterrissage=0, plushaut=0, droite=0, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=0, gauche=0, avance=0, recule=0, decollage=1, arretetoi=0}, etatdurgence={tournedroite=0, atterrissage=0, plushaut=0, droite=0, etatdurgence=1, tournegauche=0, plusbas=0, faisunflip=0, gauche=0, avance=0, recule=0, decollage=0, arretetoi=0}, arretetoi={tournedroite=0, atterrissage=0, plushaut=0, droite=0, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=0, gauche=0, avance=0, recule=0, decollage=0, arretetoi=1}}
+hyp\ref, tournedroite , atterrissage , plushaut , droite , etatdurgence , tournegauche , plusbas , faisunflip , gauche , avance , recule , decollage , arretetoi , 
+atterrissage   	, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+plusbas   	, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
+plushaut   	, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+faisunflip   	, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 
+gauche   	, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
+avance   	, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
+droite   	, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+recule   	, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 
+decollage   	, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 
+etatdurgence   	, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 
+arretetoi   	, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 
 
-Taux d'echec :0.9230769
+Taux d'echec :0.0
 End.

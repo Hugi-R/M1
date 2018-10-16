@@ -46,13 +46,13 @@ public class myDTWtest {
 	public static void main(String[] args) throws IOException, InterruptedException {
 
 		myDTWtest mdt = new myDTWtest(new DTWHelperDefault(), new myMFCCdistance());
-		String pathCorpus = "C:\\Users\\Hugo\\workspace\\TestDTW\\corpus\\";
+		String pathCorpus = "Tests\\test_1\\";
 		mdt.matriceConfusion(pathCorpus + "hypothese", pathCorpus + "reference");
 		System.out.println("End.");
 	}
 
 	public void matriceConfusion(String data, String truth) throws IOException, InterruptedException {
-		Pattern p = Pattern.compile("[MF]\\d+_([a-z]+).wav.csv");
+		Pattern p = Pattern.compile("[MFH]\\d+_([a-z]+).wav.csv");
 		File[] datas = new File(data).listFiles();
 		File[] truths = new File(truth).listFiles();
 		Map<String, Map<String, Integer>> confusion = new HashMap<>();
@@ -133,13 +133,13 @@ public class myDTWtest {
 		WindowMaker windowMaker = new MultipleFileWindowMaker(files);
 
 		// Etape 2. Recuperation des MFCC du mot Alpha
-		MFCC[] mfccsAlpha = new MFCC[MFCCLength];
+		MFCC[] mfccsAlpha = new MFCC[FieldLength(a)];
 		for (int i = 0; i < mfccsAlpha.length; i++) {
 			mfccsAlpha[i] = extractor.nextMFCC(windowMaker);
 		}
 
 		// Etape 3. Construction du Field (ensemble de MFCC) de alpha
-		Field alphaField = new Field(removeSilence(mfccsAlpha));
+		Field alphaField = new Field(/*removeSilence(*/mfccsAlpha);
 
 		// Etape 1. Lecture de Bravo
 		files = new ArrayList<>();
@@ -147,14 +147,14 @@ public class myDTWtest {
 		windowMaker = new MultipleFileWindowMaker(files);
 
 		// Etape 2. Recuperation des MFCC du mot Bravo
-		MFCC[] mfccsBravo = new MFCC[MFCCLength];
+		MFCC[] mfccsBravo = new MFCC[FieldLength(b)];
 		for (int i = 0; i < mfccsBravo.length; i++) {
 			mfccsBravo[i] = extractor.nextMFCC(windowMaker);
 
 		}
 
 		// Etape 3. Construction du Field (ensemble de MFCC) de Bravo
-		Field bravoField = new Field(removeSilence(mfccsBravo));
+		Field bravoField = new Field(/*removeSilence(*/mfccsBravo);
 
 		return myDTWHelper.DTWDistance(alphaField, bravoField);
 	}
@@ -164,7 +164,7 @@ public class myDTWtest {
 		int i = 0;
 		int j = 0;
 		for(MFCC mfcc : mfccs){
-			if(i > 2 && i < MFCCLength-2){
+			if(i > 2 && i < mfccs.length-2){
 				res.add(mfcc);
 				++j;
 			}

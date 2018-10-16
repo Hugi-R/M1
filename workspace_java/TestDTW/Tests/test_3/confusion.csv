@@ -1,0 +1,6 @@
+hyp\ref, tourneadroite , avance , droite , recule , arretetoi 
+tourneadroite   	, 1, 0, 1, 0, 0 
+avance   	, 0, 1, 1, 0, 0 
+droite   	, 0, 0, 2, 0, 0 
+recule   	, 0, 0, 1, 1, 0 
+arretetoi   	, 0, 0, 1, 0, 1

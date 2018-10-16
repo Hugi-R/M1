@@ -1,0 +1,20 @@
+H02_arretetoi.wav.csv detected as H01_arretetoi.wav.csv with a distance of 15.928462
+H02_avance.wav.csv detected as H01_avance.wav.csv with a distance of 16.789253
+H02_droite.wav.csv detected as H01_droite.wav.csv with a distance of 19.991047
+H02_recule.wav.csv detected as H01_recule.wav.csv with a distance of 20.836294
+H02_tourneadroite.wav.csv detected as H01_tourneadroite.wav.csv with a distance of 18.318197
+H03_arretetoi.wav.csv detected as H01_droite.wav.csv with a distance of 28.626543
+H03_avance.wav.csv detected as H01_droite.wav.csv with a distance of 31.658154
+H03_droite.wav.csv detected as H01_droite.wav.csv with a distance of 18.845417
+H03_recule.wav.csv detected as H01_droite.wav.csv with a distance of 26.429632
+H03_tourneadroite.wav.csv detected as H01_droite.wav.csv with a distance of 22.38692
+{tourneadroite={tourneadroite=1, avance=0, droite=1, recule=0, arretetoi=0}, avance={tourneadroite=0, avance=1, droite=1, recule=0, arretetoi=0}, droite={tourneadroite=0, avance=0, droite=2, recule=0, arretetoi=0}, recule={tourneadroite=0, avance=0, droite=1, recule=1, arretetoi=0}, arretetoi={tourneadroite=0, avance=0, droite=1, recule=0, arretetoi=1}}
+hyp\ref, tourneadroite , avance , droite , recule , arretetoi , 
+tourneadroite   	, 1, 0, 1, 0, 0, 
+avance   	, 0, 1, 1, 0, 0, 
+droite   	, 0, 0, 2, 0, 0, 
+recule   	, 0, 0, 1, 1, 0, 
+arretetoi   	, 0, 0, 1, 0, 1, 
+
+Taux d'echec :0.4
+End.
