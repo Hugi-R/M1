@@ -1,0 +1,6 @@
+petit rapport
+suite de test sur moodle
+pnr
+cmake
+supporte expr sans espace
+gérer les variables
