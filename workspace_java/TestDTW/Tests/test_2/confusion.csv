@@ -1,0 +1,14 @@
+hyp\ref, tournedroite , atterrissage , plushaut , droite , etatdurgence , tournegauche , plusbas , faisunflip , gauche , avance , recule , decollage , arretetoi
+tournedroite   	, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1
+atterrissage   	, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0
+plushaut   	, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0
+droite   	, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1
+etatdurgence   	, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0
+tournegauche   	, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0
+plusbas   	, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0
+faisunflip   	, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0
+gauche   	, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1
+avance   	, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1
+recule   	, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 3, 0
+decollage   	, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 2, 1, 0
+arretetoi   	, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0

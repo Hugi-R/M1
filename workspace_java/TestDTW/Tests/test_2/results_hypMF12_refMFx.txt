@@ -1,0 +1,70 @@
+F01_arretetoi.wav.csv detected as F03_etatdurgence.wav.csv with a distance of 11.640981
+F01_atterrissage.wav.csv detected as M07_decollage.wav.csv with a distance of 24.913542
+F01_avance.wav.csv detected as F04_avance.wav.csv with a distance of 10.289678
+F01_decollage.wav.csv detected as F03_recule.wav.csv with a distance of 16.108084
+F01_droite.wav.csv detected as F05_recule.wav.csv with a distance of 17.64237
+F01_etatdurgence.wav.csv detected as F03_tournedroite.wav.csv with a distance of 18.977362
+F01_faisunflip.wav.csv detected as F03_plusbas.wav.csv with a distance of 11.867438
+F01_gauche.wav.csv detected as M08_arretetoi.wav.csv with a distance of 13.830818
+F01_plusbas.wav.csv detected as F03_etatdurgence.wav.csv with a distance of 10.066597
+F01_plushaut.wav.csv detected as M13_faisunflip.wav.csv with a distance of 14.789
+F01_recule.wav.csv detected as F04_avance.wav.csv with a distance of 11.457267
+F01_tournedroite.wav.csv detected as M12_etatdurgence.wav.csv with a distance of 15.51913
+F01_tournegauche.wav.csv detected as F03_etatdurgence.wav.csv with a distance of 10.84269
+F02_arretetoi.wav.csv detected as F03_plusbas.wav.csv with a distance of 13.66803
+F02_atterrissage.wav.csv detected as F03_tournedroite.wav.csv with a distance of 11.90049
+F02_avance.wav.csv detected as M05_decollage.wav.csv with a distance of 13.583342
+F02_decollage.wav.csv detected as M12_recule.wav.csv with a distance of 11.293509
+F02_droite.wav.csv detected as M13_tournegauche.wav.csv with a distance of 30.780909
+F02_etatdurgence.wav.csv detected as M05_decollage.wav.csv with a distance of 15.830698
+F02_faisunflip.wav.csv detected as M05_decollage.wav.csv with a distance of 18.199697
+F02_gauche.wav.csv detected as M06_tournegauche.wav.csv with a distance of 30.85315
+F02_plusbas.wav.csv detected as M12_recule.wav.csv with a distance of 14.469986
+F02_plushaut.wav.csv detected as M05_droite.wav.csv with a distance of 23.539001
+F02_recule.wav.csv detected as M13_decollage.wav.csv with a distance of 12.690929
+F02_tournedroite.wav.csv detected as M05_decollage.wav.csv with a distance of 21.35524
+F02_tournegauche.wav.csv detected as F03_atterrissage.wav.csv with a distance of 27.243526
+M01_arretetoi.wav.csv detected as M05_decollage.wav.csv with a distance of 11.518786
+M01_atterrissage.wav.csv detected as F03_atterrissage.wav.csv with a distance of 16.735556
+M01_avance.wav.csv detected as F04_arretetoi.wav.csv with a distance of 11.927977
+M01_decollage.wav.csv detected as F03_plusbas.wav.csv with a distance of 12.3681965
+M01_droite.wav.csv detected as F04_arretetoi.wav.csv with a distance of 12.238617
+M01_etatdurgence.wav.csv detected as M05_decollage.wav.csv with a distance of 14.9348
+M01_faisunflip.wav.csv detected as F04_recule.wav.csv with a distance of 10.585781
+M01_gauche.wav.csv detected as F03_plusbas.wav.csv with a distance of 17.135994
+M01_plusbas.wav.csv detected as M05_atterrissage.wav.csv with a distance of 12.76786
+M01_plushaut.wav.csv detected as F05_recule.wav.csv with a distance of 12.185433
+M01_recule.wav.csv detected as M05_decollage.wav.csv with a distance of 13.495093
+M01_tournedroite.wav.csv detected as F04_arretetoi.wav.csv with a distance of 9.933613
+M01_tournegauche.wav.csv detected as M05_decollage.wav.csv with a distance of 11.6968775
+M02_arretetoi.wav.csv detected as M04_recule.wav.csv with a distance of 12.7177515
+M02_atterrissage.wav.csv detected as M11_decollage.wav.csv with a distance of 11.90889
+M02_avance.wav.csv detected as M10_tournedroite.wav.csv with a distance of 11.705169
+M02_decollage.wav.csv detected as M11_decollage.wav.csv with a distance of 13.821401
+M02_droite.wav.csv detected as M11_decollage.wav.csv with a distance of 11.882467
+M02_etatdurgence.wav.csv detected as F03_recule.wav.csv with a distance of 12.332378
+M02_faisunflip.wav.csv detected as M08_atterrissage.wav.csv with a distance of 12.35738
+M02_gauche.wav.csv detected as M11_droite.wav.csv with a distance of 11.389792
+M02_plusbas.wav.csv detected as M11_tournedroite.wav.csv with a distance of 12.158424
+M02_plushaut.wav.csv detected as M10_tournedroite.wav.csv with a distance of 12.577744
+M02_recule.wav.csv detected as M11_decollage.wav.csv with a distance of 14.787505
+M02_tournedroite.wav.csv detected as M11_droite.wav.csv with a distance of 12.588408
+M02_tournegauche.wav.csv detected as M11_faisunflip.wav.csv with a distance of 12.643887
+{tournedroite={tournedroite=0, atterrissage=0, plushaut=0, droite=1, etatdurgence=1, tournegauche=0, plusbas=0, faisunflip=0, gauche=0, avance=0, recule=0, decollage=1, arretetoi=1}, atterrissage={tournedroite=1, atterrissage=1, plushaut=0, droite=0, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=0, gauche=0, avance=0, recule=0, decollage=2, arretetoi=0}, plushaut={tournedroite=1, atterrissage=0, plushaut=0, droite=1, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=1, gauche=0, avance=0, recule=1, decollage=0, arretetoi=0}, droite={tournedroite=0, atterrissage=0, plushaut=0, droite=0, etatdurgence=0, tournegauche=1, plusbas=0, faisunflip=0, gauche=0, avance=0, recule=1, decollage=1, arretetoi=1}, etatdurgence={tournedroite=1, atterrissage=0, plushaut=0, droite=0, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=0, gauche=0, avance=0, recule=1, decollage=2, arretetoi=0}, tournegauche={tournedroite=0, atterrissage=1, plushaut=0, droite=0, etatdurgence=1, tournegauche=0, plusbas=0, faisunflip=1, gauche=0, avance=0, recule=0, decollage=1, arretetoi=0}, plusbas={tournedroite=1, atterrissage=1, plushaut=0, droite=0, etatdurgence=1, tournegauche=0, plusbas=0, faisunflip=0, gauche=0, avance=0, recule=1, decollage=0, arretetoi=0}, faisunflip={tournedroite=0, atterrissage=1, plushaut=0, droite=0, etatdurgence=0, tournegauche=0, plusbas=1, faisunflip=0, gauche=0, avance=0, recule=1, decollage=1, arretetoi=0}, gauche={tournedroite=0, atterrissage=0, plushaut=0, droite=1, etatdurgence=0, tournegauche=1, plusbas=1, faisunflip=0, gauche=0, avance=0, recule=0, decollage=0, arretetoi=1}, avance={tournedroite=1, atterrissage=0, plushaut=0, droite=0, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=0, gauche=0, avance=1, recule=0, decollage=1, arretetoi=1}, recule={tournedroite=0, atterrissage=0, plushaut=0, droite=0, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=0, gauche=0, avance=1, recule=0, decollage=3, arretetoi=0}, decollage={tournedroite=0, atterrissage=0, plushaut=0, droite=0, etatdurgence=0, tournegauche=0, plusbas=1, faisunflip=0, gauche=0, avance=0, recule=2, decollage=1, arretetoi=0}, arretetoi={tournedroite=0, atterrissage=0, plushaut=0, droite=0, etatdurgence=1, tournegauche=0, plusbas=1, faisunflip=0, gauche=0, avance=0, recule=1, decollage=1, arretetoi=0}}
+ordre, tournedroite , atterrissage , plushaut , droite , etatdurgence , tournegauche , plusbas , faisunflip , gauche , avance , recule , decollage , arretetoi , 
+tournedroite   	, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 
+atterrissage   	, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 
+plushaut   	, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 
+droite   	, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 
+etatdurgence   	, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 
+tournegauche   	, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 
+plusbas   	, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 
+faisunflip   	, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 
+gauche   	, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 1, 
+avance   	, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 
+recule   	, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 3, 0, 
+decollage   	, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 2, 1, 0, 
+arretetoi   	, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 
+
+Taux d'echec :0.9423077
+End.
