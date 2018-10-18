@@ -22,7 +22,7 @@ import fr.enseeiht.danck.voice_analyzer.defaults.DTWHelperDefault;
 
 public class myDTWtest {
 
-	protected static final int MFCCLength = 13;
+	//protected static final int MFCCLength = 13;
 
 	// Fonction permettant de calculer la taille des Fields
 	// c'est-à-dire le nombre de MFCC du Field
@@ -46,9 +46,12 @@ public class myDTWtest {
 	public static void main(String[] args) throws IOException, InterruptedException {
 
 		myDTWtest mdt = new myDTWtest(new DTWHelperDefault(), new myMFCCdistance());
-		String pathCorpus = "Tests\\test_1\\";
-		mdt.matriceConfusion(pathCorpus + "hypothese", pathCorpus + "reference");
-		System.out.println("End.");
+		String path = "Tests/";
+		String tests[] = {"test_1", "test_2", "test_3", "test_4"};
+		for (String t : tests) {
+			mdt.matriceConfusion(path + t +"/hypothese", path + t +"/reference");
+			System.out.println("End "+t+".");
+		}
 	}
 
 	public void matriceConfusion(String data, String truth) throws IOException, InterruptedException {
@@ -159,6 +162,7 @@ public class myDTWtest {
 		return myDTWHelper.DTWDistance(alphaField, bravoField);
 	}
 	
+	//abandonne
 	public MFCC[] removeSilence(MFCC[] mfccs){
 		ArrayList<MFCC> res = new ArrayList<>();
 		int i = 0;
