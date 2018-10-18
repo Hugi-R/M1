@@ -1,0 +1,20 @@
+H02_arretetoi.wav.csv detected as M10_arretetoi.wav.csv with a distance of 33.785427
+H02_avance.wav.csv detected as M11_droite.wav.csv with a distance of 29.667368
+H02_droite.wav.csv detected as M03_droite.wav.csv with a distance of 29.450176
+H02_recule.wav.csv detected as M06_faisunflip.wav.csv with a distance of 28.124802
+H02_tourneadroite.wav.csv detected as M13_avance.wav.csv with a distance of 29.861998
+H03_arretetoi.wav.csv detected as M01_arretetoi.wav.csv with a distance of 22.867762
+H03_avance.wav.csv detected as M12_avance.wav.csv with a distance of 22.637522
+H03_droite.wav.csv detected as M13_avance.wav.csv with a distance of 20.2862
+H03_recule.wav.csv detected as M06_faisunflip.wav.csv with a distance of 21.712534
+H03_tourneadroite.wav.csv detected as M13_avance.wav.csv with a distance of 22.371994
+{tourneadroite={tournedroite=0, atterrissage=0, plushaut=0, droite=0, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=0, gauche=0, avance=2, recule=0, decollage=0, arretetoi=0}, avance={tournedroite=0, atterrissage=0, plushaut=0, droite=1, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=0, gauche=0, avance=1, recule=0, decollage=0, arretetoi=0}, droite={tournedroite=0, atterrissage=0, plushaut=0, droite=1, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=0, gauche=0, avance=1, recule=0, decollage=0, arretetoi=0}, recule={tournedroite=0, atterrissage=0, plushaut=0, droite=0, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=2, gauche=0, avance=0, recule=0, decollage=0, arretetoi=0}, arretetoi={tournedroite=0, atterrissage=0, plushaut=0, droite=0, etatdurgence=0, tournegauche=0, plusbas=0, faisunflip=0, gauche=0, avance=0, recule=0, decollage=0, arretetoi=2}}
+hyp\ref, tournedroite , atterrissage , plushaut , droite , etatdurgence , tournegauche , plusbas , faisunflip , gauche , avance , recule , decollage , arretetoi , 
+tourneadroite   	, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 
+avance   	, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
+droite   	, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
+recule   	, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 
+arretetoi   	, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 
+
+Taux d'echec :0.6
+End.
