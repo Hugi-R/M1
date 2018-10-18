@@ -1,4 +1,5 @@
-aa/a.out
+*.out
+*.exe
 cpp/tp/CMakeFiles
 cpp/tp/calculator
 cpp/tp/cmake_install.cmake

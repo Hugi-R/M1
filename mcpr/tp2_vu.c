@@ -2,6 +2,9 @@
  * IRIT/UPS
  * Gestion des acces a une voie unique
 */
+/*
+  Exercice d'Hugo Roussel
+*/
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -16,7 +19,7 @@
 /* variables moniteur */
 pthread_cond_t attendre = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-bool passage = 0;
+int passage = 0;
 int sensPassage = 0;
 
 int nbPassages; /* Valeur commune � tous */
@@ -49,8 +52,11 @@ void demanderAccesVU (int monSens) {
   lock(&mutex);
   while((passage > 0) && (sensPassage != monSens))
     pthread_cond_wait(&attendre, &mutex);
+  //printf("thread=%lu passage=%d sensPassage=%d\n", pthread_self(), passage, sensPassage);
+  printf("   Vehicule %lu, de sens %d rentre sur la VU\n", pthread_self(), monSens);
   passage += 1;
   sensPassage = monSens;
+  //printf("thread=%lu passage=%d sensPassage=%d\n", pthread_self(), passage, sensPassage);
   pthread_cond_signal(&attendre);
   unlock(&mutex);
 }
@@ -61,9 +67,10 @@ int oppose (int sens) {
 }
 
 /*---------------------------------------------------------------------*/
-void libererAccesVU (void) {
+void libererAccesVU (int monSens) {
   lock(&mutex);
   passage -= 1;
+  printf("   Vehicule %lu, de sens %d sort de la VU\n", pthread_self(), monSens);
   if(passage == 0) pthread_cond_signal(&attendre);
   unlock(&mutex);
 }
@@ -93,13 +100,14 @@ void *vehicule (void *arg) {
   for (i = 0; i < nbPassages; i++) {
     roulerVD(monSens, i);
     demanderAccesVU(monSens);
-    printf("passage=%d sensPassage=%d\n", passage, sensPassage);
-    printf("   Vehicule %lu, de sens %d rentre sur la VU\n", pthread_self(), monSens);
+    //Les messages d'entrée/sortie ont été déplacé dans le moniteur pour ne pas avoir d'entrelacement
+    //printf("passage=%d sensPassage=%d\n", passage, sensPassage);
+    //printf("   Vehicule %lu, de sens %d rentre sur la VU\n", pthread_self(), monSens);
     roulerVU(monSens, i);
-    printf("   Vehicule %lu, de sens %d sort de la VU\n", pthread_self(), monSens);
-    printf("passage=%d sensPassage=%d\n", passage, sensPassage);
-    libererAccesVU();
-    printf("   Vehicule %lu, de sens %d est sorti de la VU\n", pthread_self(), monSens);
+    //printf("   Vehicule %lu, de sens %d sort de la VU\n", pthread_self(), monSens);
+    //printf("passage=%d sensPassage=%d\n", passage, sensPassage);
+    libererAccesVU(monSens);
+    //printf("   Vehicule %lu, de sens %d est sorti de la VU\n", pthread_self(), monSens);
   }
   printf("   Vehicule %lu, de sens %d termine\n", pthread_self(), monSens);
   return(NULL);
