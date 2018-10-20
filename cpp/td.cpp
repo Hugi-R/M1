@@ -7,12 +7,14 @@ class Complex{
     public:
     class DivisionByZero{};
 
-    constexpr Complex(double a = 0, double b = 0);
+    Complex(double a = 0, double b = 0);
     Complex(const Complex&);
     Complex(Complex&&);
 
-    Complex& operator=(const Complex& c){
-        return Complex{c};
+    Complex& operator=(Complex& c){
+        this->_real = c._real;
+        this->_imaginary = c._imaginary;
+        return *this;
     }
     friend Complex operator+(const Complex& a, const Complex& b);
     friend Complex operator/(const Complex& a, const Complex& b);
@@ -45,10 +47,13 @@ class CVector{
     void push_back(Complex& c);
 
     class iterator {
+        friend class CVector;
         public:
-        iterator(CVector& vec);
-        bool operator!=(iterator& it);
-
+        iterator(CVector& vec, int pos = 0);
+        bool operator==(const iterator& it);
+        bool operator!=(const iterator& it);
+        void operator++();
+        Complex& operator*();
 
         private:
         int pos;
@@ -58,6 +63,7 @@ class CVector{
 
     iterator begin();
     iterator end();
+    void erase(iterator& it);
 
     private:
     int m_C;
@@ -76,7 +82,7 @@ Complex operator/(const Complex& a, const Complex& b){
     return Complex(num1/denom, num2/denom);
 }
 
-constexpr Complex::Complex(double a, double b) : _real{a}, _imaginary{b} {}
+Complex::Complex(double a, double b) : _real{a}, _imaginary{b} {}
 
 Complex::Complex(const Complex& other) : _real{other._real}, _imaginary{other._imaginary} {}
 
@@ -122,6 +128,9 @@ inline Complex& CVector::operator[](int i) {
         throw std::exception();
     return m_data[i];
 }
+
+CVector::iterator::iterator(CVector& vec, int pos) : vec(vec), pos{pos} {}
+
 void CVector::push_back(Complex& c){
     if(m_N == m_C){
         Complex* newData = new Complex[2*m_C];
@@ -134,6 +143,30 @@ void CVector::push_back(Complex& c){
         m_C *= 2;
     }
     m_data[m_N++];
+}
+
+bool CVector::iterator::operator==(const CVector::iterator& it){
+    return &vec == &(it.vec) && pos == it.pos;
+}
+
+bool CVector::iterator::operator!=(const CVector::iterator& it){
+    return ! operator==(it);
+}
+
+CVector::iterator CVector::begin(){return{*this,0};}
+CVector::iterator CVector::end(){return{*this,m_N};}
+
+void CVector::iterator::operator++(){++pos;}
+Complex& CVector::iterator::operator*(){return vec[pos];}
+
+void CVector::erase(CVector::iterator& it){
+    if((&(it.vec)!=this) || (it.pos >= m_N))
+        throw std::exception();
+    ++it;
+    for(int j = it.pos-1; it != end(); ++it, ++j){
+        it.vec[j] = *it;
+    }
+    --m_N;
 }
 
 int main(int argc, char const *argv[])
