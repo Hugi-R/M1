@@ -82,9 +82,6 @@ stmt:		simple_stmt
 				{ () }
 ;
 
-
-
-
 simple_stmt: TURN_LEFT
 				{ gen (INVOKE (turn_left, 0, 0)) }
 |			TURN_OFF
@@ -99,8 +96,11 @@ simple_stmt: TURN_LEFT
 |			ITERATE INT TIMES stmt { print_string "iterate\n" }
 |			WHILE test DO stmt { print_string "while\n" }
 |			IF test THEN stmt { print_string "if\n" }
+|			IF test THEN stmt_else ELSE stmt { print_string "if\n" }
 |			ID { if is_defined $1 then print_string "id $1\n" else (raise (SyntaxError "ID not defined")) }
 ;
+
+(*Same language withou IF-THEN*)
 
 test:
 |	FRONT_IS_CLEAR {()}

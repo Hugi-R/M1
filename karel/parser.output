@@ -23,30 +23,31 @@
   16              | ITERATE INT TIMES stmt
   17              | WHILE test DO stmt
   18              | IF test THEN stmt
-  19              | ID
+  19              | IF test THEN stmt ELSE stmt
+  20              | ID
 
-  20  test : FRONT_IS_CLEAR
-  21       | FRONT_IS_BLOCKED
-  22       | LEFT_IS_CLEAR
-  23       | LEFT_IS_BLOCKED
-  24       | RIGHT_IS_CLEAR
-  25       | RIGHT_IS_BLOCKED
-  26       | NEXT_TO_A_BEEPER
-  27       | NOT_NEXT_TO_A_BEEPER
-  28       | FACING_NORTH
-  29       | NOT_FACING_NORTH
-  30       | FACING_EAST
-  31       | NOT_FACING_EAST
-  32       | FACING_SOUTH
-  33       | NOT_FACING_SOUTH
-  34       | FACING_WEST
-  35       | NOT_FACING_WEST
-  36       | ANY_BEEPERS_IN_BEEPER_BAG
-  37       | NO_BEEPERS_IN_BEEPER_BAG
+  21  test : FRONT_IS_CLEAR
+  22       | FRONT_IS_BLOCKED
+  23       | LEFT_IS_CLEAR
+  24       | LEFT_IS_BLOCKED
+  25       | RIGHT_IS_CLEAR
+  26       | RIGHT_IS_BLOCKED
+  27       | NEXT_TO_A_BEEPER
+  28       | NOT_NEXT_TO_A_BEEPER
+  29       | FACING_NORTH
+  30       | NOT_FACING_NORTH
+  31       | FACING_EAST
+  32       | NOT_FACING_EAST
+  33       | FACING_SOUTH
+  34       | NOT_FACING_SOUTH
+  35       | FACING_WEST
+  36       | NOT_FACING_WEST
+  37       | ANY_BEEPERS_IN_BEEPER_BAG
+  38       | NO_BEEPERS_IN_BEEPER_BAG
 
-  38  define_new : DEFINE_NEW ID AS stmts
+  39  define_new : DEFINE_NEW ID AS stmts
 
-  39  %entry% : '\001' prog
+  40  %entry% : '\001' prog
 
 state 0
 	$accept : . %entry% $end  (0)
@@ -58,7 +59,7 @@ state 0
 
 
 state 1
-	%entry% : '\001' . prog  (39)
+	%entry% : '\001' . prog  (40)
 
 	BEGIN_PROG  shift 3
 	.  error
@@ -84,13 +85,13 @@ state 3
 
 
 state 4
-	%entry% : '\001' prog .  (39)
+	%entry% : '\001' prog .  (40)
 
-	.  reduce 39
+	.  reduce 40
 
 
 state 5
-	define_new : DEFINE_NEW . ID AS stmts  (38)
+	define_new : DEFINE_NEW . ID AS stmts  (39)
 
 	ID  shift 8
 	.  error
@@ -115,7 +116,7 @@ state 7
 
 
 state 8
-	define_new : DEFINE_NEW ID . AS stmts  (38)
+	define_new : DEFINE_NEW ID . AS stmts  (39)
 
 	AS  shift 11
 	.  error
@@ -150,7 +151,7 @@ state 10
 
 
 state 11
-	define_new : DEFINE_NEW ID AS . stmts  (38)
+	define_new : DEFINE_NEW ID AS . stmts  (39)
 
 	MOVE  shift 12
 	TURN_LEFT  shift 13
@@ -234,6 +235,7 @@ state 18
 
 state 19
 	simple_stmt : IF . test THEN stmt  (18)
+	simple_stmt : IF . test THEN stmt ELSE stmt  (19)
 
 	NEXT_TO_A_BEEPER  shift 28
 	FRONT_IS_CLEAR  shift 29
@@ -259,9 +261,9 @@ state 19
 
 
 state 20
-	simple_stmt : ID .  (19)
+	simple_stmt : ID .  (20)
 
-	.  reduce 19
+	.  reduce 20
 
 
 state 21
@@ -315,11 +317,11 @@ state 25
 state 26
 	stmts : stmts . SEMI stmt  (7)
 	stmts : stmts . SEMI  (8)
-	define_new : DEFINE_NEW ID AS stmts .  (38)
+	define_new : DEFINE_NEW ID AS stmts .  (39)
 
 	SEMI  shift 50
-	BEGIN_EXEC  reduce 38
-	DEFINE_NEW  reduce 38
+	BEGIN_EXEC  reduce 39
+	DEFINE_NEW  reduce 39
 
 
 state 27
@@ -330,111 +332,111 @@ state 27
 
 
 state 28
-	test : NEXT_TO_A_BEEPER .  (26)
-
-	.  reduce 26
-
-
-state 29
-	test : FRONT_IS_CLEAR .  (20)
-
-	.  reduce 20
-
-
-state 30
-	test : FRONT_IS_BLOCKED .  (21)
-
-	.  reduce 21
-
-
-state 31
-	test : LEFT_IS_CLEAR .  (22)
-
-	.  reduce 22
-
-
-state 32
-	test : LEFT_IS_BLOCKED .  (23)
-
-	.  reduce 23
-
-
-state 33
-	test : RIGHT_IS_CLEAR .  (24)
-
-	.  reduce 24
-
-
-state 34
-	test : RIGHT_IS_BLOCKED .  (25)
-
-	.  reduce 25
-
-
-state 35
-	test : NOT_NEXT_TO_A_BEEPER .  (27)
+	test : NEXT_TO_A_BEEPER .  (27)
 
 	.  reduce 27
 
 
-state 36
-	test : FACING_NORTH .  (28)
+state 29
+	test : FRONT_IS_CLEAR .  (21)
+
+	.  reduce 21
+
+
+state 30
+	test : FRONT_IS_BLOCKED .  (22)
+
+	.  reduce 22
+
+
+state 31
+	test : LEFT_IS_CLEAR .  (23)
+
+	.  reduce 23
+
+
+state 32
+	test : LEFT_IS_BLOCKED .  (24)
+
+	.  reduce 24
+
+
+state 33
+	test : RIGHT_IS_CLEAR .  (25)
+
+	.  reduce 25
+
+
+state 34
+	test : RIGHT_IS_BLOCKED .  (26)
+
+	.  reduce 26
+
+
+state 35
+	test : NOT_NEXT_TO_A_BEEPER .  (28)
 
 	.  reduce 28
 
 
-state 37
-	test : NOT_FACING_NORTH .  (29)
+state 36
+	test : FACING_NORTH .  (29)
 
 	.  reduce 29
 
 
-state 38
-	test : FACING_EAST .  (30)
+state 37
+	test : NOT_FACING_NORTH .  (30)
 
 	.  reduce 30
 
 
-state 39
-	test : NOT_FACING_EAST .  (31)
+state 38
+	test : FACING_EAST .  (31)
 
 	.  reduce 31
 
 
-state 40
-	test : FACING_SOUTH .  (32)
+state 39
+	test : NOT_FACING_EAST .  (32)
 
 	.  reduce 32
 
 
-state 41
-	test : NOT_FACING_SOUTH .  (33)
+state 40
+	test : FACING_SOUTH .  (33)
 
 	.  reduce 33
 
 
-state 42
-	test : FACING_WEST .  (34)
+state 41
+	test : NOT_FACING_SOUTH .  (34)
 
 	.  reduce 34
 
 
-state 43
-	test : NOT_FACING_WEST .  (35)
+state 42
+	test : FACING_WEST .  (35)
 
 	.  reduce 35
 
 
-state 44
-	test : ANY_BEEPERS_IN_BEEPER_BAG .  (36)
+state 43
+	test : NOT_FACING_WEST .  (36)
 
 	.  reduce 36
 
 
-state 45
-	test : NO_BEEPERS_IN_BEEPER_BAG .  (37)
+state 44
+	test : ANY_BEEPERS_IN_BEEPER_BAG .  (37)
 
 	.  reduce 37
+
+
+state 45
+	test : NO_BEEPERS_IN_BEEPER_BAG .  (38)
+
+	.  reduce 38
 
 
 state 46
@@ -446,6 +448,7 @@ state 46
 
 state 47
 	simple_stmt : IF test . THEN stmt  (18)
+	simple_stmt : IF test . THEN stmt ELSE stmt  (19)
 
 	THEN  shift 53
 	.  error
@@ -532,6 +535,7 @@ state 52
 
 state 53
 	simple_stmt : IF test THEN . stmt  (18)
+	simple_stmt : IF test THEN . stmt ELSE stmt  (19)
 
 	MOVE  shift 12
 	TURN_LEFT  shift 13
@@ -579,11 +583,46 @@ state 58
 	.  reduce 17
 
 
+59: shift/reduce conflict (shift 60, reduce 18) on ELSE
 state 59
 	simple_stmt : IF test THEN stmt .  (18)
+	simple_stmt : IF test THEN stmt . ELSE stmt  (19)
 
-	.  reduce 18
+	ELSE  shift 60
+	BEGIN_EXEC  reduce 18
+	END_EXEC  reduce 18
+	DEFINE_NEW  reduce 18
+	SEMI  reduce 18
+	END  reduce 18
+
+
+state 60
+	simple_stmt : IF test THEN stmt ELSE . stmt  (19)
+
+	MOVE  shift 12
+	TURN_LEFT  shift 13
+	TURN_OFF  shift 14
+	PICK_BEEPER  shift 15
+	PUT_BEEPER  shift 16
+	ITERATE  shift 17
+	WHILE  shift 18
+	IF  shift 19
+	ID  shift 20
+	BEGIN  shift 21
+	.  error
+
+	stmt  goto 61
+	simple_stmt  goto 25
+
+
+state 61
+	simple_stmt : IF test THEN stmt ELSE stmt .  (19)
+
+	.  reduce 19
+
+
+State 59 contains 1 shift/reduce conflict.
 
 
 44 terminals, 10 nonterminals
-40 grammar rules, 60 states
+41 grammar rules, 62 states
