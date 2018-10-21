@@ -55,6 +55,10 @@ open Karel
 %token BEGIN
 %token END
 
+/* rend THEN et ELSE associatif a droite
+Le conflit IF-THEN-ELSE sera donc résolu en faisant un shift sur ELSE */
+%right THEN ELSE
+
 %type <unit> prog
 %start prog
 
@@ -96,11 +100,9 @@ simple_stmt: TURN_LEFT
 |			ITERATE INT TIMES stmt { print_string "iterate\n" }
 |			WHILE test DO stmt { print_string "while\n" }
 |			IF test THEN stmt { print_string "if\n" }
-|			IF test THEN stmt_else ELSE stmt { print_string "if\n" }
+|			IF test THEN stmt ELSE stmt { print_string "ifelse\n" }
 |			ID { if is_defined $1 then print_string "id $1\n" else (raise (SyntaxError "ID not defined")) }
 ;
-
-(*Same language withou IF-THEN*)
 
 test:
 |	FRONT_IS_CLEAR {()}

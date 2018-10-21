@@ -583,7 +583,6 @@ state 58
 	.  reduce 17
 
 
-59: shift/reduce conflict (shift 60, reduce 18) on ELSE
 state 59
 	simple_stmt : IF test THEN stmt .  (18)
 	simple_stmt : IF test THEN stmt . ELSE stmt  (19)
@@ -619,9 +618,6 @@ state 61
 	simple_stmt : IF test THEN stmt ELSE stmt .  (19)
 
 	.  reduce 19
-
-
-State 59 contains 1 shift/reduce conflict.
 
 
 44 terminals, 10 nonterminals
