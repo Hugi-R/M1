@@ -22,47 +22,75 @@ std::vector<std::string> Expr::split ( const std::string& s, char delim ){
     for(char c : s){
         if(c == delim){
             res.push_back(buff);
-            res.push_back(std::string()+delim);
+            std::string d;
+            d.push_back(delim);
+            res.push_back(d);
             buff = "";
         } else {
             buff.push_back(c);
         }
     }
     res.push_back(buff);
+    //remove "" from vector
+    std::vector<std::string> tmp;
+    for(auto s : res){
+        if
+        tmp.push_back(s);
+    }
     return res;
 }
 
-Expr::ExprToken Expr::toToken( const std::string& s ){
+Expr::ExprToken Expr::toToken( const std::string& s , int levelParenthesis ){
     double num = 0;
     Expr::Kind kind;
-    if( s == "+" || s == "-" || s == "*" || s == "/"){
+    int priority = 0;
+    std::cout << "toToken( " << s << ", " << levelParenthesis << " )" << std::endl;
+    if( s == "+" || s == "-"){
         kind = Expr::Kind::op;
+        priority = levelParenthesis + 1;
+    } else if (s == "*" || s == "/"){
+        kind = Expr::Kind::op;
+        priority = levelParenthesis + 2;
     } else {
         num = std::stod(s);
         kind = Expr::Kind::num;
     }
-    Expr::ExprToken res{kind, num, s};
+    Expr::ExprToken res{kind, num, s, priority};
     return res;
 }
 
 Expr::ExprToken Expr::toToken( double x ){
-    return Expr::ExprToken{Expr::Kind::num, x, std::string()};
+    return Expr::ExprToken{Expr::Kind::num, x, std::string(), 0};
 }
 
-/* return a valid vector of token */
+/* return vector of token that is a valid expression */
 std::vector<Expr::ExprToken> Expr::toTokenVector( const std::vector<std::string> vs ){
     std::vector<Expr::ExprToken> res;
     Expr::Kind expected{Expr::Kind::num};
+    int levelParenthesis = 0;
+    for(std::string s : vs)
+        std::cout << s << std::endl;
     for(std::string s : vs){
-        auto tok = toToken(s);
-        if(tok.kind == expected){
-            res.push_back(tok);
-            if(expected == Expr::Kind::num)
-                expected = Expr::Kind::op;
-            else
-                expected = Expr::Kind::num;
+        std::cout << s << std::endl;
+        if(s == "("){
+            if(expected != Expr::Kind::num) // avoid a(-c)
+                throw std::exception();
+            levelParenthesis += 1;
+        } else if (s == ")"){
+            if(expected == Expr::Kind::num) // avoid (a-)c
+                throw std::exception();
+            levelParenthesis -= 1;
         } else {
-            throw std::exception();
+            auto tok = toToken(s, levelParenthesis*10);
+            if(tok.kind == expected){
+                res.push_back(tok);
+                if(expected == Expr::Kind::num)
+                    expected = Expr::Kind::op;
+                else
+                    expected = Expr::Kind::num;
+            } else {
+                throw std::exception();
+            }
         }
     }
 
@@ -73,23 +101,25 @@ std::vector<Expr::ExprToken> Expr::toTokenVector( const std::vector<std::string>
 }
 
 std::vector<std::string> Expr::splitExpr (const std::string& s){
-    //remove space 
+    //remove space
     std::string buff;
     for(char c : s){
         if(c != ' ')
             buff.push_back(c);
     }
-
-    constexpr static char operators[4] = {'+', '-', '*', '/'};
+    std::cout << std::endl << buff << std::endl;
+    constexpr static char delims[] = {'(', '+', '-', '*', '/', ')'};
     std::vector<std::string> res;
     res.push_back(buff);
-    for(char delim : operators){
+    for(char delim : delims){
         std::vector<std::string> tmp;
         tmp.clear();
         for(std::string tok : res){
             std::vector<std::string> tmpsplit(split(tok, delim));
             tmp.insert(tmp.end(), tmpsplit.begin(), tmpsplit.end());
         }
+        for(auto st : tmp)
+            std::cout << st << std::endl;
         res = tmp;
     }
     return res;
@@ -97,9 +127,7 @@ std::vector<std::string> Expr::splitExpr (const std::string& s){
 
 bool Expr::isPriority (Expr::ExprToken tokA, Expr::ExprToken tokB){
     assert(tokA.kind == Expr::Kind::op && tokB.kind == Expr::Kind::op);
-        if((tokA.value == "*" || tokA.value == "/" ) && (tokB.value == "+" || tokB.value == "-"))
-            return true;
-        return false;
+        return tokA.priority > tokB.priority;
 }
 
 double Expr::evaluate (Expr::ExprToken op, Expr::ExprToken valA, Expr::ExprToken valB){
@@ -172,19 +200,19 @@ void Expr::printTok(Expr::ExprToken tok){
     std::cout << tok.kind << "; " << tok.num << "; " << tok.value << std::endl;
 }
 
-int main(){
-    /*std::vector<std::string> vs(splitExpr("17-24 / 4 *3 +2"));
+/*int main(){
+    std::vector<std::string> vs(splitExpr("17-24 / 4 *3 +2"));
     for(auto s: vs )
         std::cout << s << std::endl;
     std::vector<Expr::ExprToken> toks(toTokenVector(vs));
     for(auto tok : toks)
         printTok(tok);
-    
+
     std::cout << "rpn\n";
     std::vector<Expr::ExprToken> toksRpn(rpn(toks));
     for(auto tok : toksRpn)
         printTok(tok);
-*/
+
     std::cout << "eval 17-24 / 4 *3 +2 = ";
     Expr expr1("17-24 / 4 *3 +2");
     std::cout << expr1.eval() << std::endl;
@@ -192,4 +220,4 @@ int main(){
     Expr expr2("17+24 * 4 /3 -2");
     std::cout << expr2.eval() << std::endl;
     return 0;
-}
+}*/

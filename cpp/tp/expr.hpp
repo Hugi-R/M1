@@ -8,6 +8,7 @@ class Expr {
         Kind kind;
         double num;
         std::string value;
+        int priority;
     };
     // Construit une expression a partir du texte
     Expr ( const char * str );
@@ -16,12 +17,12 @@ class Expr {
     double eval();
     // Affiche la représentation interne
     void print();
-    
-    private:
+
+    public: //to private after debug
     std::vector<Expr::ExprToken> expr;
 
     std::vector<std::string> split ( const std::string& s, char delim );
-    Expr::ExprToken toToken( const std::string& s );
+    Expr::ExprToken toToken( const std::string& s, int levelParenthesis );
     Expr::ExprToken toToken( double x );
     std::vector<Expr::ExprToken> toTokenVector( const std::vector<std::string> vs );
     std::vector<std::string> splitExpr (const std::string& s);
