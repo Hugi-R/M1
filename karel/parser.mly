@@ -86,6 +86,8 @@ stmt:		simple_stmt
 				{ () }
 ;
 
+adr : /* empty */ { nextquad () }
+
 simple_stmt: TURN_LEFT
 				{ gen (INVOKE (turn_left, 0, 0)) }
 |			TURN_OFF
@@ -93,37 +95,47 @@ simple_stmt: TURN_LEFT
 |			MOVE
 				{ gen (INVOKE (move, 0, 0)) }
 |			PICK_BEEPER
-				{ print_string "pickbeeper\n" }
+				{ gen (INVOKE (pick_beeper, 0, 0)) }
 |			PUT_BEEPER
-				{ print_string "putbeeper\n" }
+				{ gen (INVOKE (put_beeper, 0, 0)) }
 |			BEGIN stmts END {()}
 |			ITERATE INT TIMES stmt { print_string "iterate\n" }
-|			WHILE test DO stmt { print_string "while\n" }
-|			IF test THEN stmt { print_string "if\n" }
-|			IF test THEN stmt ELSE stmt { print_string "ifelse\n" }
+|			WHILE adr if_test DO stmt { backpatch $2 (nextquad ()); gen (GOTO ($3, 0, 0)) }
+|			IF if_test THEN stmt { backpatch $2 (nextquad ()) }
+|			IF if_test THEN stmt ELSE stmt { print_string "ifelse\n" }
 |			ID { if is_defined $1 then print_string "id $1\n" else (raise (SyntaxError "ID not defined")) }
 ;
 
 test:
-|	FRONT_IS_CLEAR {()}
-|	FRONT_IS_BLOCKED {()}
-|	LEFT_IS_CLEAR {()}
-|	LEFT_IS_BLOCKED {()}
-|	RIGHT_IS_CLEAR {()}
-|	RIGHT_IS_BLOCKED {()}
-|	NEXT_TO_A_BEEPER {()}
-|	NOT_NEXT_TO_A_BEEPER {()}
-|	FACING_NORTH {()}
-|	NOT_FACING_NORTH {()}
-|	FACING_EAST {()}
-|	NOT_FACING_EAST {()}
-|	FACING_SOUTH {()}
-|	NOT_FACING_SOUTH {()}
-|	FACING_WEST {()}
-|	NOT_FACING_WEST {()}
-|	ANY_BEEPERS_IN_BEEPER_BAG {()}
-|	NO_BEEPERS_IN_BEEPER_BAG {()}
+	FRONT_IS_CLEAR {let d = new_temp () in gen (INVOKE (is_clear, front, d)); d}
+|	FRONT_IS_BLOCKED {let d = new_temp () in gen (INVOKE (is_blocked, front, d)); d}
+|	LEFT_IS_CLEAR {let d = new_temp () in gen (INVOKE (is_clear, left, d)); d}
+|	LEFT_IS_BLOCKED {let d = new_temp () in gen (INVOKE (is_blocked, left, d)); d}
+|	RIGHT_IS_CLEAR {let d = new_temp () in gen (INVOKE (is_clear, right, d)); d}
+|	RIGHT_IS_BLOCKED {let d = new_temp () in gen (INVOKE (is_blocked, right, d)); d}
+|	NEXT_TO_A_BEEPER {let d = new_temp () in gen (INVOKE (next_beeper, d, 0)); d}
+|	NOT_NEXT_TO_A_BEEPER {let d = new_temp () in gen (INVOKE (no_next_beeper, d, 0)); d}
+|	FACING_NORTH {let d = new_temp () in gen (INVOKE (facing, north, d)); d}
+|	NOT_FACING_NORTH {let d = new_temp () in gen (INVOKE (not_facing, north, d)); d}
+|	FACING_EAST {let d = new_temp () in gen (INVOKE (facing, east, d)); d}
+|	NOT_FACING_EAST {let d = new_temp () in gen (INVOKE (not_facing, east, d)); d}
+|	FACING_SOUTH {let d = new_temp () in gen (INVOKE (facing, south, d)); d}
+|	NOT_FACING_SOUTH {let d = new_temp () in gen (INVOKE (not_facing, south, d)); d}
+|	FACING_WEST {let d = new_temp () in gen (INVOKE (facing, west, d)); d}
+|	NOT_FACING_WEST {let d = new_temp () in gen (INVOKE (not_facing, west, d)); d}
+|	ANY_BEEPERS_IN_BEEPER_BAG {let d = new_temp () in gen (INVOKE (any_beeper, d, 0)); d}
+|	NO_BEEPERS_IN_BEEPER_BAG {let d = new_temp () in gen (INVOKE (no_beeper, d, 0)); d}
 ;
 
 define_new:
 |	DEFINE_NEW ID AS stmts { if is_defined $2 then raise (SyntaxError "ID already defined") else define $2 0 }
+;
+
+if_test : test {
+	let z = new_temp () in
+	let _ = gen (SETI (z, 0)) in
+	let a = nextquad () in
+	let _ = gen (GOTO_EQ (0, $1, z)) in
+	a
+}
+;

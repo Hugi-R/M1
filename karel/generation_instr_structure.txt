@@ -1,0 +1,34 @@
+While :
+etape 1
+WHILE next_beeper DO pic_beeper
+
+seti vz, 0
+loop:
+invoke (next_beeper, v1, 0)
+goto_eq endloop, v1, vz
+pic_beeper
+goto loop
+endloop:
+
+etape 2:
+WHILE test DO stmt
+
+e1:
+if_test
+stmt
+goto e1
+e2:
+
+etape 3:
+
+etape 4:
+adr : /* empty */ { nexquad () }
+
+while_test : adr if_test {
+    ($1, $2)
+}
+
+while adr if_test do stmt {
+    backpatch $2 (nexquad ())
+    goto $1
+}

@@ -132,28 +132,37 @@ void print_greater_k_heap_add(int *data, int n, int k){
 int lt (const void * a, const void * b){
 	return ( *(int*)a - *(int*)b );
 }
- 
+
 void print_greater_k_qsort(int *data, int n, int k){
 	qsort(data, n, sizeof(int), lt);
-	print_data_decrease(data, k);
+	print_data_decrease(data+(n-k), k);
 }
 
 void print_greater_k(int *data, int n, int k, int method){
 	switch(method){
 		case 1 :
 			printf("\nMethod 1 : bubble sort\n");
+			/* g(n,k) = k*n (pire cas : k fois (1er for) n swap (2e for) )
+				f(k,n) = teta(kn) 0 <= k <= n, pira cas k = n O(n^2)*/
 			bubble_sort_k(data, n, k);
 			print_data_decrease(data+(n-k), k);
 			break;
 		case 2 :
+			/* complex espace : teta(n) (en place, avec qq variables temporaires, donc taille des données)
+			   buildheap O(n/2logn), k remove O(klogn) -> O(nlogn), pire cas k = n */
 			printf("\nMethod 2 : binary heap\n");
 			print_greater_k_heap(data, n, k);
 			break;
 		case 3:
+			/* complex espace : teta(n) (données entrées) + teta(n+5) (heap) = teta(n) */
 			printf("\nMethod 3 : binary heap with add\n");
 			print_greater_k_heap_add(data, n, k);
 			break;
 		case 4:
+			/* qsort teta(nlogn)
+			   g(k,n) = teta(nlogn) + k = teta(nlogn)
+			   exo 1 meilleur si k < log(n)
+			   exo 2 teta(nlogn) donc qsort pas meilleur */
 			printf("\nMethod 4 : qsort\n");
 			print_greater_k_qsort(data, n, k);
 			break;
