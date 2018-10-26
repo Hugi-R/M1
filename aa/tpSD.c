@@ -49,7 +49,7 @@ void print_data_decrease(int *data, int n){
 /* écrire une fonction qui traite un tableau*/
 void bubble_sort_k(int *data, int n, int k){
 	for(int j=0; j < k; ++j){
-		for(int i = 0; i < n-1; ++i){
+		for(int i = 0; i < n-1-j; ++i){
 			if( data[i] > data[i+1] )
 				swap(data + i, data + i + 1);
 		}
