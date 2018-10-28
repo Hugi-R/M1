@@ -31,20 +31,20 @@ std::vector<std::string> Expr::split ( const std::string& s, char delim ){
         }
     }
     res.push_back(buff);
+
     //remove "" from vector
     std::vector<std::string> tmp;
     for(auto s : res){
-        if
-        tmp.push_back(s);
+        if(s != "")
+            tmp.push_back(s);
     }
-    return res;
+    return tmp;
 }
 
-Expr::ExprToken Expr::toToken( const std::string& s , int levelParenthesis ){
+Expr::ExprToken Expr::toToken( const std::string& s , int levelParenthesis, bool isNegative ){
     double num = 0;
     Expr::Kind kind;
     int priority = 0;
-    std::cout << "toToken( " << s << ", " << levelParenthesis << " )" << std::endl;
     if( s == "+" || s == "-"){
         kind = Expr::Kind::op;
         priority = levelParenthesis + 1;
@@ -53,6 +53,7 @@ Expr::ExprToken Expr::toToken( const std::string& s , int levelParenthesis ){
         priority = levelParenthesis + 2;
     } else {
         num = std::stod(s);
+        if(isNegative) num = -num;
         kind = Expr::Kind::num;
     }
     Expr::ExprToken res{kind, num, s, priority};
@@ -68,16 +69,14 @@ std::vector<Expr::ExprToken> Expr::toTokenVector( const std::vector<std::string>
     std::vector<Expr::ExprToken> res;
     Expr::Kind expected{Expr::Kind::num};
     int levelParenthesis = 0;
-    for(std::string s : vs)
-        std::cout << s << std::endl;
-    for(std::string s : vs){
-        std::cout << s << std::endl;
+    for(uint i = 0; i < vs.size(); ++i ){
+        std::string s = vs[i];
         if(s == "("){
-            if(expected != Expr::Kind::num) // avoid a(-c)
+            if(expected != Expr::Kind::num) // avoid : a(+c)
                 throw std::exception();
             levelParenthesis += 1;
         } else if (s == ")"){
-            if(expected == Expr::Kind::num) // avoid (a-)c
+            if(expected == Expr::Kind::num) // avoid : (a+)c
                 throw std::exception();
             levelParenthesis -= 1;
         } else {
@@ -88,6 +87,15 @@ std::vector<Expr::ExprToken> Expr::toTokenVector( const std::vector<std::string>
                     expected = Expr::Kind::op;
                 else
                     expected = Expr::Kind::num;
+            } else if( s == "-" ) { //special case : -a
+                auto tok = toToken(vs[i+1], levelParenthesis*10, true);
+                if(tok.kind == Expr::Kind::num){
+                    res.push_back(tok);
+                    expected = Expr::Kind::op;
+                    i += 1; //sorry to the for loop :(
+                } else {
+                    throw std::exception();
+                }
             } else {
                 throw std::exception();
             }
@@ -107,7 +115,6 @@ std::vector<std::string> Expr::splitExpr (const std::string& s){
         if(c != ' ')
             buff.push_back(c);
     }
-    std::cout << std::endl << buff << std::endl;
     constexpr static char delims[] = {'(', '+', '-', '*', '/', ')'};
     std::vector<std::string> res;
     res.push_back(buff);
@@ -118,8 +125,6 @@ std::vector<std::string> Expr::splitExpr (const std::string& s){
             std::vector<std::string> tmpsplit(split(tok, delim));
             tmp.insert(tmp.end(), tmpsplit.begin(), tmpsplit.end());
         }
-        for(auto st : tmp)
-            std::cout << st << std::endl;
         res = tmp;
     }
     return res;
@@ -166,13 +171,9 @@ std::vector<Expr::ExprToken> Expr::rpn( const std::vector<Expr::ExprToken>& toks
 }
 
 double Expr::eval(){
-    /*for(auto tok : expr)
-        printTok(tok);
-    std::cout << std::endl;*/
     std::stack<Expr::ExprToken> res;
     for(auto it = expr.rbegin(); it != expr.rend(); ++it){
         auto tokA = *it;
-        //printTok(tokA);
         if(tokA.kind == Expr::Kind::num){
             while(!res.empty() && res.top().kind == Expr::Kind::num){
                 auto tokB = res.top();
@@ -180,9 +181,6 @@ double Expr::eval(){
                 auto op = res.top();
                 res.pop();
                 auto tok = toToken(evaluate(op, tokA, tokB));
-                /*std::cout << "\nevaluate" << std::endl;
-                printTok(tok);
-                std::cout << std::endl;*/
                 tokA = tok;
             }
             res.push(tokA);
@@ -190,8 +188,6 @@ double Expr::eval(){
             res.push(tokA);
         }
     }
-    /*std::cout << std::endl;
-    printTok(res.top());*/
     assert(res.top().kind == Expr::Kind::num);
     return res.top().num;
 }

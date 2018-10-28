@@ -22,7 +22,7 @@ class Expr {
     std::vector<Expr::ExprToken> expr;
 
     std::vector<std::string> split ( const std::string& s, char delim );
-    Expr::ExprToken toToken( const std::string& s, int levelParenthesis );
+    Expr::ExprToken toToken( const std::string& s, int levelParenthesis, bool isNegative = false );
     Expr::ExprToken toToken( double x );
     std::vector<Expr::ExprToken> toTokenVector( const std::vector<std::string> vs );
     std::vector<std::string> splitExpr (const std::string& s);

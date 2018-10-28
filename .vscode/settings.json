@@ -29,6 +29,9 @@
         "typeinfo": "cpp",
         "utility": "cpp",
         "deque": "cpp",
-        "system_error": "cpp"
+        "system_error": "cpp",
+        "cmath": "cpp",
+        "optional": "cpp",
+        "string_view": "cpp"
     }
 }
