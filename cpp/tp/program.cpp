@@ -74,7 +74,6 @@ void Program::addVariable(const std::string s){
     if(variables.count(toks[0])>0) throw std::exception();
     Expr expr(toks[2]);
     variables.insert(std::pair<std::string,double>(toks[0], expr.eval(variables)));
-    std::cout << "new variable : " << toks[0] << " as " << expr.toString() << std::endl;
 }
 
 double Program::eval(std::ostream& os){
