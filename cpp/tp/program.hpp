@@ -8,6 +8,7 @@
 
 class Program {
     public:
+    std::map<std::string, double> variables;
     Program(std::istream& in);
     /* output the evaluation of the program.
        Return the evaluation of the last expression */
@@ -18,7 +19,6 @@ class Program {
     private:
     std::vector<Expr> printed;
     std::vector<Expr> hidden;
-    std::map<std::string, Expr> variables;
 
     std::vector<std::string> splitProg (const std::string& s);
     void parse(std::string in);

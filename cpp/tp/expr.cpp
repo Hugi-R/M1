@@ -18,7 +18,7 @@ Expr::Expr( const char * cstr ): str{cstr} {
 
 std::string Expr::toString(){return str;}
 
-Expr::ExprToken Expr::toToken( const std::string& s , int levelParenthesis, bool isNegative ){
+Expr::ExprToken& Expr::toToken( const std::string& s , int levelParenthesis, bool isNegative ){
     double num = 0;
     Expr::Kind kind;
     int priority = 0;
@@ -39,7 +39,7 @@ Expr::ExprToken Expr::toToken( const std::string& s , int levelParenthesis, bool
             res = new Expr::ExprToken(kind, num, s, priority);
         } else {
             kind = Expr::Kind::num;
-            res = new Expr::ExprTokenVar(kind, num, s, priority);
+            res = new Expr::ExprToken(kind, num, s, priority, true);
         }
     }
     return *res;
@@ -61,7 +61,7 @@ std::vector<Expr::ExprToken> Expr::toTokenVector( const std::vector<std::string>
                 throw std::exception();
             levelParenthesis += 1;
         } else if (s == ")"){
-            if(expected == Expr::Kind::num) // avoid : (a+)c
+            if(expected != Expr::Kind::op) // avoid : (a+)c
                 throw std::exception();
             levelParenthesis -= 1;
         } else {
@@ -115,12 +115,12 @@ std::vector<std::string> Expr::splitExpr (const std::string& s){
     return res;
 }
 
-bool Expr::isPriority (Expr::ExprToken tokA, Expr::ExprToken tokB){
+bool Expr::isPriority (const Expr::ExprToken& tokA, const Expr::ExprToken& tokB){
     assert(tokA.kind == Expr::Kind::op && tokB.kind == Expr::Kind::op);
         return tokA.priority > tokB.priority;
 }
 
-double Expr::evaluate (Expr::ExprToken op, Expr::ExprToken valA, Expr::ExprToken valB, std::map<std::string, Expr>& variables){
+double Expr::evaluate (const Expr::ExprToken& op, const Expr::ExprToken& valA, const Expr::ExprToken& valB, std::map<std::string, double>& variables){
     assert((op.kind == Expr::Kind::op) && (valA.kind == Expr::Kind::num) && (valB.kind == Expr::Kind::num));
     if(op.value == "*"){
         return valA.eval(variables) * valB.eval(variables);
@@ -155,7 +155,7 @@ std::vector<Expr::ExprToken> Expr::rpn( const std::vector<Expr::ExprToken>& toks
     return expr;
 }
 
-double Expr::eval(std::map<std::string, Expr>& variables){
+double Expr::eval(std::map<std::string, double>& variables){
     std::stack<Expr::ExprToken> res;
     for(auto it = expr.rbegin(); it != expr.rend(); ++it){
         auto tokA = *it;
@@ -177,15 +177,19 @@ double Expr::eval(std::map<std::string, Expr>& variables){
     return res.top().eval(variables);
 }
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-double Expr::ExprToken::eval(std::map<std::string, Expr>& variables){
-    //assert(kind == Expr::Kind::num);
-    return num;
+/*#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"*/
+double Expr::ExprToken::eval(std::map<std::string, double>& variables) const{
+    if(isVar){
+        return variables[value];
+    }else{
+        return num;
+    }
 }
-#pragma GCC diagnostic pop
+//#pragma GCC diagnostic pop
 
-double Expr::ExprTokenVar::eval(std::map<std::string, Expr>& variables){
+/*double Expr::ExprTokenVar::eval(std::map<std::string, Expr>& variables) const{
     //assert(kind == Expr::Kind::var);
+    std::cout << "eval Var " << value << " = " << variables[value].eval(variables) << std::endl;
     return variables[value].eval(variables);
-}
+}*/
