@@ -177,8 +177,6 @@ double Expr::eval(std::map<std::string, double>& variables){
     return res.top().eval(variables);
 }
 
-/*#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-parameter"*/
 double Expr::ExprToken::eval(std::map<std::string, double>& variables) const{
     if(isVar){
         return variables[value];
@@ -186,10 +184,3 @@ double Expr::ExprToken::eval(std::map<std::string, double>& variables) const{
         return num;
     }
 }
-//#pragma GCC diagnostic pop
-
-/*double Expr::ExprTokenVar::eval(std::map<std::string, Expr>& variables) const{
-    //assert(kind == Expr::Kind::var);
-    std::cout << "eval Var " << value << " = " << variables[value].eval(variables) << std::endl;
-    return variables[value].eval(variables);
-}*/

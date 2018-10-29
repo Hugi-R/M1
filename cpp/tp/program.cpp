@@ -81,8 +81,6 @@ double Program::eval(std::ostream& os){
     print(os);
     os << "--------" << std::endl;
     double res;
-    for(auto e : hidden)
-        e.eval(variables);
     for(auto e : printed){
         res = e.eval(variables);
         os << res << "\n";

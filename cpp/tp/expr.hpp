@@ -18,11 +18,6 @@ class Expr {
         virtual double eval(std::map<std::string, double>& variables) const;
         void print() const { std::cout << kind << "; " << num << "; " << value << std::endl;}
     };
-    /*class ExprTokenVar : public ExprToken {
-        public:
-        ExprTokenVar(Kind k, double n, std::string s, int p) : ExprToken(k,n,s,p) {};
-        double eval(std::map<std::string, Expr>& variables) const override;
-    };*/
     // Construit une expression a partir du texte
     Expr ( const char * str );
     Expr ( const std::string& str = ""); //compilator is grumpy if no default, apparently need it for map ?
