@@ -3,5 +3,9 @@ project(calculator)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra -g")
-set(SOURCE_FILES expr.cpp expr.hpp main.cpp)
-add_executable(calculator ${SOURCE_FILES})
+
+set(TEST_EXPR expr.cpp expr.hpp tools.hpp testExpr.cpp)
+add_executable(testExpr.exe ${TEST_EXPR})
+
+set(TEST_PROGRAM program.cpp program.hpp expr.hpp expr.cpp tools.hpp)
+add_executable(testProgram.exe ${TEST_PROGRAM})

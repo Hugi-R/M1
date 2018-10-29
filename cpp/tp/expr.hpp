@@ -1,3 +1,5 @@
+#ifndef EXPR_CPP
+#define EXPR_CPP 1
 #include <vector>
 #include <string>
 
@@ -16,12 +18,12 @@ class Expr {
     // Retourne la valeur de l'expression
     double eval();
     // Affiche la représentation interne
-    void print();
+    std::string toString();
 
     public: //to private after debug
+    std::string str;
     std::vector<Expr::ExprToken> expr;
 
-    std::vector<std::string> split ( const std::string& s, char delim );
     Expr::ExprToken toToken( const std::string& s, int levelParenthesis, bool isNegative = false );
     Expr::ExprToken toToken( double x );
     std::vector<Expr::ExprToken> toTokenVector( const std::vector<std::string> vs );
@@ -31,3 +33,4 @@ class Expr {
     std::vector<Expr::ExprToken> rpn( const std::vector<Expr::ExprToken>& toks );
     void printTok(Expr::ExprToken tok);
 };
+#endif

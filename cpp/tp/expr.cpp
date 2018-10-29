@@ -7,39 +7,16 @@
 #include <cassert>
 
 #include "expr.hpp"
+#include "tools.hpp"
 
-Expr::Expr( const std::string& str ){
+Expr::Expr( const std::string& str ) : str{str} {
     expr = rpn(toTokenVector(splitExpr(str)));
 }
-Expr::Expr( const char * str ){
-    expr = rpn(toTokenVector(splitExpr(std::string(str))));
+Expr::Expr( const char * cstr ): str{cstr} {
+    expr = rpn(toTokenVector(splitExpr(str)));
 }
 
-/* split a string by a delimiter, the delimiter is not removed and is added as a string */
-std::vector<std::string> Expr::split ( const std::string& s, char delim ){
-    std::vector<std::string> res;
-    std::string buff{""};
-    for(char c : s){
-        if(c == delim){
-            res.push_back(buff);
-            std::string d;
-            d.push_back(delim);
-            res.push_back(d);
-            buff = "";
-        } else {
-            buff.push_back(c);
-        }
-    }
-    res.push_back(buff);
-
-    //remove "" from vector
-    std::vector<std::string> tmp;
-    for(auto s : res){
-        if(s != "")
-            tmp.push_back(s);
-    }
-    return tmp;
-}
+std::string Expr::toString(){return str;}
 
 Expr::ExprToken Expr::toToken( const std::string& s , int levelParenthesis, bool isNegative ){
     double num = 0;
@@ -195,25 +172,3 @@ double Expr::eval(){
 void Expr::printTok(Expr::ExprToken tok){
     std::cout << tok.kind << "; " << tok.num << "; " << tok.value << std::endl;
 }
-
-/*int main(){
-    std::vector<std::string> vs(splitExpr("17-24 / 4 *3 +2"));
-    for(auto s: vs )
-        std::cout << s << std::endl;
-    std::vector<Expr::ExprToken> toks(toTokenVector(vs));
-    for(auto tok : toks)
-        printTok(tok);
-
-    std::cout << "rpn\n";
-    std::vector<Expr::ExprToken> toksRpn(rpn(toks));
-    for(auto tok : toksRpn)
-        printTok(tok);
-
-    std::cout << "eval 17-24 / 4 *3 +2 = ";
-    Expr expr1("17-24 / 4 *3 +2");
-    std::cout << expr1.eval() << std::endl;
-    std::cout << "\neval 17+24 * 4 /3 -2 = ";
-    Expr expr2("17+24 * 4 /3 -2");
-    std::cout << expr2.eval() << std::endl;
-    return 0;
-}*/

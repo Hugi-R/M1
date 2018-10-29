@@ -32,6 +32,7 @@
         "system_error": "cpp",
         "cmath": "cpp",
         "optional": "cpp",
-        "string_view": "cpp"
+        "string_view": "cpp",
+        "string": "cpp"
     }
 }
