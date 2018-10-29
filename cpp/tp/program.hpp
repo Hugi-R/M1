@@ -8,7 +8,11 @@
 class Program {
     public:
     Program(std::istream& in);
-    void eval();
+    /* output the evaluation of the program.
+       Return the evaluation of the last expression */
+    double eval(std::ostream& os);
+    /* output the program */
+    void print(std::ostream& os);
 
     private:
     std::vector<Expr> printed;

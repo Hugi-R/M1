@@ -1,14 +1,14 @@
-#include <iostream>
 #include <string>
-#include <sstream>
 
 #include "program.hpp"
 #include "tools.hpp"
 
 Program::Program(std::istream& in){
     std::string tmp;
-    while(!std::getline(in, tmp).eof())
+    while(!in.eof()){
+        std::getline(in, tmp);
         parse(tmp);
+    }
 }
 
 std::vector<std::string> Program::splitProg (const std::string& s){
@@ -60,13 +60,22 @@ void Program::parse(std::string in){
     }
 }
 
-void Program::eval(){
-
+double Program::eval(std::ostream& os){
+    print(os);
+    os << "--------" << std::endl;
+    double res;
+    for(auto e : printed){
+        res = e.eval();
+        os << res << "\n";
+    }
+    return res;
 }
 
-int main(/*int argc, char const *argv[]*/)
-{
-    std::istringstream iss("1;2 \n 3; 4");
-    Program p(iss);
-    return 0;
+void Program::print(std::ostream& os){
+    for(auto e : hidden){
+        os << e.toString() << ";\n";
+    }
+    for(auto e : printed){
+        os << e.toString() << "\n";
+    }
 }
