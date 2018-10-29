@@ -22,23 +22,31 @@ Expr::ExprToken Expr::toToken( const std::string& s , int levelParenthesis, bool
     double num = 0;
     Expr::Kind kind;
     int priority = 0;
+    Expr::ExprToken *res;
     if( s == "+" || s == "-"){
         kind = Expr::Kind::op;
         priority = levelParenthesis + 1;
+        res = new Expr::ExprToken(kind, num, s, priority);
     } else if (s == "*" || s == "/"){
         kind = Expr::Kind::op;
         priority = levelParenthesis + 2;
+        res = new Expr::ExprToken(kind, num, s, priority);
     } else {
-        num = std::stod(s);
-        if(isNegative) num = -num;
-        kind = Expr::Kind::num;
+        if(std::isdigit(s[0])){
+            num = std::stod(s);
+            if(isNegative) num = -num;
+            kind = Expr::Kind::num;
+            res = new Expr::ExprToken(kind, num, s, priority);
+        } else {
+            kind = Expr::Kind::num;
+            res = new Expr::ExprTokenVar(kind, num, s, priority);
+        }
     }
-    Expr::ExprToken res{kind, num, s, priority};
-    return res;
+    return *res;
 }
 
 Expr::ExprToken Expr::toToken( double x ){
-    return Expr::ExprToken{Expr::Kind::num, x, std::string(), 0};
+    return Expr::ExprToken(Expr::Kind::num, x, std::string(), 0);
 }
 
 /* return vector of token that is a valid expression */
@@ -99,7 +107,7 @@ std::vector<std::string> Expr::splitExpr (const std::string& s){
         std::vector<std::string> tmp;
         tmp.clear();
         for(std::string tok : res){
-            std::vector<std::string> tmpsplit(split(tok, delim));
+            std::vector<std::string> tmpsplit(Tools::split(tok, delim));
             tmp.insert(tmp.end(), tmpsplit.begin(), tmpsplit.end());
         }
         res = tmp;
@@ -112,16 +120,16 @@ bool Expr::isPriority (Expr::ExprToken tokA, Expr::ExprToken tokB){
         return tokA.priority > tokB.priority;
 }
 
-double Expr::evaluate (Expr::ExprToken op, Expr::ExprToken valA, Expr::ExprToken valB){
+double Expr::evaluate (Expr::ExprToken op, Expr::ExprToken valA, Expr::ExprToken valB, std::map<std::string, Expr>& variables){
     assert((op.kind == Expr::Kind::op) && (valA.kind == Expr::Kind::num) && (valB.kind == Expr::Kind::num));
     if(op.value == "*"){
-        return valA.num * valB.num;
+        return valA.eval(variables) * valB.eval(variables);
     } else if (op.value == "/"){
-        return valA.num / valB.num;
+        return valA.eval(variables) / valB.eval(variables);
     } else if (op.value == "+"){
-        return valA.num + valB.num;
+        return valA.eval(variables) + valB.eval(variables);
     } else if (op.value == "-"){
-        return valA.num - valB.num;
+        return valA.eval(variables) - valB.eval(variables);
     }
     throw std::exception();
 }
@@ -147,7 +155,7 @@ std::vector<Expr::ExprToken> Expr::rpn( const std::vector<Expr::ExprToken>& toks
     return expr;
 }
 
-double Expr::eval(){
+double Expr::eval(std::map<std::string, Expr>& variables){
     std::stack<Expr::ExprToken> res;
     for(auto it = expr.rbegin(); it != expr.rend(); ++it){
         auto tokA = *it;
@@ -157,7 +165,7 @@ double Expr::eval(){
                 res.pop();
                 auto op = res.top();
                 res.pop();
-                auto tok = toToken(evaluate(op, tokA, tokB));
+                auto tok = toToken(evaluate(op, tokA, tokB, variables));
                 tokA = tok;
             }
             res.push(tokA);
@@ -166,9 +174,18 @@ double Expr::eval(){
         }
     }
     assert(res.top().kind == Expr::Kind::num);
-    return res.top().num;
+    return res.top().eval(variables);
 }
 
-void Expr::printTok(Expr::ExprToken tok){
-    std::cout << tok.kind << "; " << tok.num << "; " << tok.value << std::endl;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+double Expr::ExprToken::eval(std::map<std::string, Expr>& variables){
+    //assert(kind == Expr::Kind::num);
+    return num;
+}
+#pragma GCC diagnostic pop
+
+double Expr::ExprTokenVar::eval(std::map<std::string, Expr>& variables){
+    //assert(kind == Expr::Kind::var);
+    return variables[value].eval(variables);
 }

@@ -35,7 +35,8 @@ int main(/*int argc, char const *argv[]*/)
 
     for(uint i = 0; i < exprs.size(); ++i){
         Expr expr1(exprs[i]);
-        double res = expr1.eval();
+        std::map<std::string, Expr> variables;
+        double res = expr1.eval(variables);
         std::cout << ((res == results[i] && expr1.toString() == exprs[i]) ? "OK" : "KO") << "   " << exprs[i] << " = " << res
         << " and \"" << exprs[i] << "\" = \"" << expr1.toString() << "\"" << std::endl;
     }

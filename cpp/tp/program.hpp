@@ -2,6 +2,7 @@
 #define PROGRAM_HPP 1
 #include <istream>
 #include <vector>
+#include <map>
 
 #include "expr.hpp"
 
@@ -17,8 +18,10 @@ class Program {
     private:
     std::vector<Expr> printed;
     std::vector<Expr> hidden;
+    std::map<std::string, Expr> variables;
 
     std::vector<std::string> splitProg (const std::string& s);
     void parse(std::string in);
+    void addVariable(const std::string s);
 };
 #endif

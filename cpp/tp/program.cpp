@@ -1,4 +1,5 @@
 #include <string>
+#include <iostream>
 
 #include "program.hpp"
 #include "tools.hpp"
@@ -25,7 +26,7 @@ std::vector<std::string> Program::splitProg (const std::string& s){
         std::vector<std::string> tmp;
         tmp.clear();
         for(std::string tok : res){
-            std::vector<std::string> tmpsplit(split(tok, delim));
+            std::vector<std::string> tmpsplit(Tools::split(tok, delim));
             tmp.insert(tmp.end(), tmpsplit.begin(), tmpsplit.end());
         }
         res = tmp;
@@ -39,9 +40,15 @@ void Program::parse(std::string in){
     for(auto s : toks){
         if(s == ";"){
             if(expr != ""){
-                Expr e(expr);
-                hidden.push_back(e);
-                expr = "";
+                if(Tools::contain(expr, '=')){
+                    addVariable(expr);
+                    hidden.push_back(expr);
+                    expr = "";
+                } else {
+                    Expr e(expr);
+                    hidden.push_back(e);
+                    expr = "";
+                }
             }
         } else if(s == "\n"){
             if(expr != ""){
@@ -60,12 +67,24 @@ void Program::parse(std::string in){
     }
 }
 
+void Program::addVariable(const std::string s){
+    auto toks = Tools::split(s, '=');
+    if(toks.size() != 3) throw std::exception();
+    if(std::isdigit(toks[0][0])) throw std::exception();
+    if(variables.count(toks[0])>0) throw std::exception();
+    Expr expr(toks[2]);
+    variables.insert(std::pair<std::string,Expr>(toks[0], expr));
+    std::cout << "new variable : " << toks[0] << " as " << expr.toString() << std::endl;
+}
+
 double Program::eval(std::ostream& os){
     print(os);
     os << "--------" << std::endl;
     double res;
+    for(auto e : hidden)
+        e.eval(variables);
     for(auto e : printed){
-        res = e.eval();
+        res = e.eval(variables);
         os << res << "\n";
     }
     return res;

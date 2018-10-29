@@ -3,7 +3,8 @@
 #include <vector>
 #include <string>
 
-
+class Tools {
+public:
 /* split a string by a delimiter, the delimiter is NOT discarded */
 static std::vector<std::string> split ( const std::string& s, char delim ){
     std::vector<std::string> res;
@@ -29,5 +30,13 @@ static std::vector<std::string> split ( const std::string& s, char delim ){
     }
     return tmp;
 }
+
+static bool contain(std::string str, char carac){
+    for(auto c : str){
+        if(c == carac) return true;
+    }
+    return false;
+}
+};
 
 #endif
