@@ -52,6 +52,7 @@ void Program::parse(std::string in){
             }
         } else if(s == "\n"){
             if(expr != ""){
+                if(Tools::contain(expr, '=')) throw std::exception(); //variable affectation are only in hidden
                 Expr e(expr);
                 printed.push_back(e);
                 expr = "";
@@ -61,6 +62,7 @@ void Program::parse(std::string in){
         }
     }
     if(expr != ""){ //treating if last is eof
+        if(Tools::contain(expr, '=')) throw std::exception(); //variable affectation are only in hidden
         Expr e(expr);
         printed.push_back(e);
         expr = "";
