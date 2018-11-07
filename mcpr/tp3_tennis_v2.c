@@ -1,9 +1,12 @@
+/* ROUSSEL Hugo */
+
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h> //strerror
 #include <pthread.h>
+#include <stdbool.h>
 
 
 #define NB_JOUEUR_MAX 20
@@ -19,6 +22,7 @@ pthread_cond_t match = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 int nbJsurTerrain = 0;
 int nbAsurTerrain = 0;
+bool matchEnCours = false;
 
 /*---------------------------------------------------------------------*/
 void thdErreur(int codeErr, char *msgErr, void *codeArret) {
@@ -45,15 +49,15 @@ void unlock (pthread_mutex_t *mutex) {
 
 void demanderTerrain(){
     lock(&mutex);
-    if(nbJsurTerrain == 2)
+    while(nbJsurTerrain == 2 || matchEnCours)
         pthread_cond_wait(&joueurs, &mutex);
 
     nbJsurTerrain += 1;
-    if(nbJsurTerrain == 1){
+    if(nbJsurTerrain < 2){
         pthread_cond_signal(&joueurs);
         pthread_cond_wait(&match, &mutex);
     }
-    if(nbAsurTerrain == 0){
+    if(nbAsurTerrain < 1){
         pthread_cond_signal(&arbitres);
         pthread_cond_wait(&match, &mutex);
     }
@@ -64,30 +68,36 @@ void demanderTerrain(){
 void libererTerrain(){
     lock(&mutex);
     nbJsurTerrain -= 1;
-    if(nbJsurTerrain == 0 && nbAsurTerrain == 0)
+    if(nbJsurTerrain == 0 && nbAsurTerrain == 0){
+        matchEnCours = false;
         pthread_cond_signal(&joueurs);
+    }
     unlock(&mutex);
 }
 
 void debuterArbitrage(){
     lock(&mutex);
-    if(nbAsurTerrain == 1)
+    while(nbAsurTerrain == 1 && matchEnCours)
         pthread_cond_wait(&arbitres, &mutex);
 
-    nbArbitre += 1;
+    nbAsurTerrain += 1;
     if(nbJsurTerrain < 2){
         pthread_cond_signal(&joueurs);
         pthread_cond_wait(&match, &mutex);
     }
     pthread_cond_signal(&match);
+    matchEnCours = true;
     unlock(&mutex);
 }
 
 void finirArbitrage(){
     lock(&mutex);
     nbAsurTerrain -= 1;
-    if(nbJsurTerrain == 0 && nbAsurTerrain == 0)
+    if(nbJsurTerrain == 0 && nbAsurTerrain == 0){
+        matchEnCours = false;
         pthread_cond_signal(&arbitres);
+    }
+    unlock(&mutex);
 }
 
 void *thdJoueur(void *arg){
@@ -107,7 +117,7 @@ void *thdArbitre(void *arg){
     printf("%lu : J'arbitre.\n", pthread_self());
     sleep(1);
     printf("%lu : J'ai fini d'arbitrer.\n", pthread_self());
-    libererTerrain();
+    finirArbitrage();
     return NULL;
 }
 
@@ -115,17 +125,15 @@ int main(int argc, char const *argv[])
 {
     pthread_t idThd[2][NB_JOUEUR_MAX];
 
-    if(argc != 3){
-        printf("Usage : %s <Nb_joueurs/2> <nb_arbitre>\n", argv[0]);
+    if(argc != 2){
+        printf("Usage : %s <Nb_equipe>\n", argv[0]);
         exit(1);
     }
 
     nbJoueur = atoi(argv[1])*2; // *2 pour etre sur d'avoir un nbr pair de joueur
     if(nbJoueur > NB_JOUEUR_MAX)
         nbJoueur = NB_JOUEUR_MAX;
-    nbArbitre = atoi(argv[2]);
-    if(nbArbitre > NB_JOUEUR_MAX/2) // max 1 arbitre pour 2 joueurs
-        nbArbitre = NB_JOUEUR_MAX/2;
+    nbArbitre = nbJoueur/2;
 
     /* lancer les joueurs */
     int etat;
