@@ -64,8 +64,10 @@ Le conflit IF-THEN-ELSE sera donc résolu en faisant un shift sur ELSE */
 
 %%
 
-prog:	BEGIN_PROG define BEGIN_EXEC stmts_opt END_EXEC END_PROG
-			{ () }
+start_prog : /* empty */ {let a = nextquad () in gen (GOTO 0); a}
+
+prog:	BEGIN_PROG start_prog define BEGIN_EXEC adr stmts_opt END_EXEC END_PROG
+			{ backpatch $2 $5; gen (STOP) } /* add stop at the end */
 ;
 
 define:
@@ -87,6 +89,13 @@ stmt:		simple_stmt
 ;
 
 adr : /* empty */ { nextquad () }
+;
+
+iter : INT { let cpt = new_temp () in gen (SETI (cpt, 0)); let one = new_temp () in gen (SETI (one, 1)); let n = new_temp () in gen (SETI (n, $1)); let startl = nextquad () in gen (GOTO_EQ (0, cpt, n)); gen (ADD (cpt, cpt, one)); startl }
+;
+
+else_ : ELSE { let a = nextquad () in gen (GOTO 0); a }
+;
 
 simple_stmt: TURN_LEFT
 				{ gen (INVOKE (turn_left, 0, 0)) }
@@ -99,11 +108,11 @@ simple_stmt: TURN_LEFT
 |			PUT_BEEPER
 				{ gen (INVOKE (put_beeper, 0, 0)) }
 |			BEGIN stmts END {()}
-|			ITERATE INT TIMES stmt { print_string "iterate\n" }
-|			WHILE adr if_test DO stmt { backpatch $2 (nextquad ()); gen (GOTO ($3, 0, 0)) }
+|			ITERATE iter TIMES stmt { let _ = gen (GOTO $2) in backpatch $2 (nextquad ()) }
+|			WHILE adr if_test DO stmt {let _ = gen (GOTO $2) in backpatch $3 (nextquad ()) }
 |			IF if_test THEN stmt { backpatch $2 (nextquad ()) }
-|			IF if_test THEN stmt ELSE stmt { print_string "ifelse\n" }
-|			ID { if is_defined $1 then print_string "id $1\n" else (raise (SyntaxError "ID not defined")) }
+|			IF if_test THEN stmt else_ adr stmt { backpatch $2 ($6); backpatch $5 (nextquad ()) }
+|			ID { if is_defined $1 then gen (CALL (get_define $1)) else (raise (SyntaxError "ID not defined")) }
 ;
 
 test:
@@ -127,8 +136,10 @@ test:
 |	NO_BEEPERS_IN_BEEPER_BAG {let d = new_temp () in gen (INVOKE (no_beeper, d, 0)); d}
 ;
 
+prologue : ID { if is_defined $1 then raise (SyntaxError "ID already defined") else define $1 (nextquad ()) }
+
 define_new:
-|	DEFINE_NEW ID AS stmts { if is_defined $2 then raise (SyntaxError "ID already defined") else define $2 0 }
+|	DEFINE_NEW prologue AS stmts { gen (RETURN) }
 ;
 
 if_test : test {
