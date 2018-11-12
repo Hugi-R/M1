@@ -1,5 +1,6 @@
 //
 // Created by Mathias Paulin on 17/10/2017.
+// Modified by Hugo Roussel.
 //
 #ifndef POACPP_TOKENSTREAM_HEADER__
 #define POACPP_TOKENSTREAM_HEADER__
@@ -12,7 +13,7 @@
 // no implicit conversions to other types are provided.
 // by inherinting from char, we are able to cast a char to a Kind ...
 enum class Kind : char {
-    name, number, end, next, print = ';',
+    fct, name, number, end, next, print = ';',
     plus = '+', minus = '-', mul = '*', div = '/',
     assign = '=', lp = '(', rp = ')'
 };
@@ -39,6 +40,9 @@ struct Token {
     /// Returns true if the token is a separator (\n, ;, next or end).
     bool isSeparator() const;
 
+    /// Returns true if the token is a function.
+    bool isFunction() const;
+
     /// Returns -1 if the given token has a higher priority, 1 if lower
     /// and 0 if they are the same.
     int compare(const Token &other) const;
@@ -46,6 +50,9 @@ struct Token {
     /// Evaluate the operator with given operands a1 and a2.
     /// (can only be used if it is an operator).
     double operate(double a1, double a2) const;
+
+    /// Parse string_value into a function
+    void parseFunction();
 };
 
 

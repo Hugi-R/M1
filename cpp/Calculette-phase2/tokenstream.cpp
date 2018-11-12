@@ -1,7 +1,9 @@
 //
 // Created by Mathias Paulin on 17/10/2017.
+// Modified by Hugo Roussel.
 //
 #include "tokenstream.h"
+#include "prog_function.h"
 #include <sstream>  // String stream
 
 
@@ -22,6 +24,10 @@ bool Token::isOperator() const {
 /// Returns true if the token is a separator (\n, ;, next or end).
 bool Token::isSeparator() const {
     return (kind == Kind::end) || (kind == Kind::print) || (kind == Kind::next);
+}
+
+bool Token::isFunction() const {
+    return kind == Kind::fct;
 }
 
 
@@ -64,6 +70,9 @@ std::ostream &operator<<(std::ostream &os, const Token &t) {
         case Kind::rp:
             os << static_cast<char>(t.kind) << ' ';
             break;
+        case Kind::fct:
+            os << t.string_value << ' ';
+            break;
         default:
             throw TokenStream::Error("Undefined Token ");
     }
@@ -83,6 +92,10 @@ double Token::operate(double a1, double a2) const {
         default:
             throw TokenStream::Error("Bad operator  -- " + string_value);
     }
+}
+
+void Token::parseFunction(){
+    number_value = ProgFunction::parse(string_value);
 }
 
 
@@ -114,12 +127,20 @@ Token TokenStream::get() {
             return ct;
         default:
             // name, name =, or error
+            // name can be a function : name(a[,b,...])
             if (std::isalpha(ch)) {
                 ct.string_value = {ch};
-                while (ip->get(ch) && std::isalnum(ch))
-                    ct.string_value += ch;
-                ip->putback(ch);
                 ct.kind = Kind::name;
+                while (ip->get(ch) && (std::isalnum(ch) || ch == '(' || ch == ')' || ch == '.' || ch == '-')){
+                    ct.string_value += ch;
+                    if(!ct.isFunction() && (ch == '(' ))
+                        ct.kind = Kind::fct;
+                }
+                if(ct.isFunction()){
+                    //checking if ct is a valid function and parsing it
+                    ct.parseFunction();
+                }
+                ip->putback(ch);
                 return ct;
             } else {
                 ip->putback(ch);

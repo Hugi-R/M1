@@ -1,5 +1,6 @@
 //
 // Created by Mathias Paulin on 17/10/2017.
+// Modified by Hugo Roussel.
 //
 #include "program.h"
 
@@ -63,6 +64,10 @@ double Program::eval() {
                 value = variable->second;
                 res_stack.push(value);
             }
+        } else if (t.isFunction()) {
+            //TODO
+            std::cout << "Function " << t << std::endl;
+             res_stack.push(t.number_value);
         } else {
             // store value in memory
             value = res_stack.top();
@@ -83,7 +88,7 @@ void Program::parse() {
     // operator stack
     std::stack<Token> op_stack;
     for (const auto &tok : _infix) {
-        if (tok.isLiteral() || tok.isIdentifier()) {
+        if (tok.isLiteral() || tok.isIdentifier() || tok.isFunction()) {
             //  Litteral or identifier value. Just put to the output queue.
             _rpn.push_back(tok);
         } else if (tok.isOperator()) {
