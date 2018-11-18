@@ -67,7 +67,7 @@ double Program::eval() {
         } else if (t.isFunction()) {
             //TODO
             std::cout << "Function " << t << std::endl;
-             res_stack.push(t.number_value);
+             res_stack.push(t.fct->eval(*this));
         } else {
             // store value in memory
             value = res_stack.top();

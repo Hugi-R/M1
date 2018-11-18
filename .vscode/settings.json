@@ -33,6 +33,11 @@
         "cmath": "cpp",
         "optional": "cpp",
         "string_view": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "bitset": "cpp",
+        "cstring": "cpp",
+        "ctime": "cpp",
+        "memory": "cpp",
+        "list": "cpp"
     }
 }

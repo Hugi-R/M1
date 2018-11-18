@@ -3,6 +3,12 @@
 #ifndef PROG_FUNCTION_H
 #define PROG_FUNCTION_H
 #include <string>
+#include <vector>
+
+//#include "tokenstream.h"//cyclic dependency
+//forward declaration :
+class Token;
+
 
 class ProgFunction {
 public:
@@ -16,8 +22,14 @@ public:
         std::string message;
     };
 
-    /// check wether s as the form of a function
+    ProgFunction(std::string args);
+
+    
     static double parse(std::string s);
+    //static double parse(TokenStream ts);
+
+    private:
+    std::vector<Token> _args;
 };
 
 #endif //PROG_FUNCTION_H

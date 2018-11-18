@@ -3,7 +3,6 @@
 // Modified by Hugo Roussel.
 //
 #include "tokenstream.h"
-#include "prog_function.h"
 #include <sstream>  // String stream
 
 
@@ -94,11 +93,6 @@ double Token::operate(double a1, double a2) const {
     }
 }
 
-void Token::parseFunction(){
-    number_value = ProgFunction::parse(string_value);
-}
-
-
 Token TokenStream::get() {
     char ch{0};
 
@@ -131,16 +125,28 @@ Token TokenStream::get() {
             if (std::isalpha(ch)) {
                 ct.string_value = {ch};
                 ct.kind = Kind::name;
-                while (ip->get(ch) && (std::isalnum(ch) || ch == '(' || ch == ')' || ch == '.' || ch == '-')){
+                while (ip->get(ch) && std::isalnum(ch)){
                     ct.string_value += ch;
-                    if(!ct.isFunction() && (ch == '(' ))
-                        ct.kind = Kind::fct;
                 }
-                if(ct.isFunction()){
-                    //checking if ct is a valid function and parsing it
-                    ct.parseFunction();
+                //token is function :
+                if(ch == '('){
+                    ct.kind = Kind::fct;
+                    ct.string_value += ch;
+                    int parenthesisLevel = 0;
+                    while(ip->get(ch) && ch != '\n' && ch != ';'){
+                        ct.string_value += ch;
+                        if(ch == ')'){
+                            if(parenthesisLevel == 0)
+                                break;
+                            else
+                                parenthesisLevel += 1;
+                        } else if(ch == '(') {
+                            parenthesisLevel += 1;
+                        }
+                    }
+                    ct.fct = new ProgFunction(ct);
                 }
-                ip->putback(ch);
+                if(ch != ')') ip->putback(ch);
                 return ct;
             } else {
                 ip->putback(ch);

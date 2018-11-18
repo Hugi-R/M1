@@ -5,6 +5,34 @@
 #ifndef POACPP_TOKENSTREAM_HEADER__
 #define POACPP_TOKENSTREAM_HEADER__
 #include <iostream> // I/O
+#include <vector>
+
+class Token;
+class Program;
+class ProgFunction {
+public:
+    class Error {
+    public:
+        explicit Error(const std::string &error) : message("ProgramFunction error : " + error) {}
+
+        const char *what() const { return message.c_str(); }
+
+    private:
+        std::string message;
+    };
+
+    ProgFunction(Token &myToken);
+
+    double eval(Program &p);
+    
+    static double parse(std::string s);
+
+    private:
+    void parse();
+    Token &_myToken;
+    std::string _name;
+    std::vector<std::string> _args;
+};
 
 
 // The token system
@@ -23,8 +51,12 @@ struct Token {
     Kind kind;
     std::string string_value;
     double number_value;
+    ProgFunction *fct{nullptr};
 
     Token(const Kind &k, const std::string &s="", double v=0) : kind(k), string_value{s}, number_value(v) {};
+    ~Token(){
+        if(fct != nullptr) delete fct;
+    }
 
     friend std::ostream &operator<<(std::ostream &os, const Token &t);
 
@@ -50,9 +82,6 @@ struct Token {
     /// Evaluate the operator with given operands a1 and a2.
     /// (can only be used if it is an operator).
     double operate(double a1, double a2) const;
-
-    /// Parse string_value into a function
-    void parseFunction();
 };
 
 

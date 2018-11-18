@@ -4,8 +4,12 @@
 #include <vector>
 #include <iostream>
 #include <sstream>
+#include <cmath>
 
-#include "prog_function.h"
+#include <iostream>
+
+//#include "prog_function.h"
+#include "tokenstream.h"
 
 double ProgFunction::parse(std::string s){
     std::regex cos("cos\\((-?\\d+\\.?\\d*)\\)");
@@ -54,3 +58,39 @@ double ProgFunction::parse(std::string s){
     return ret;
 }
 
+ProgFunction::ProgFunction(Token &myToken) : _myToken{myToken} {
+    //_myToken.number_value = parse(_myToken.string_value);
+    parse();
+    std::cout << _name << " : ";
+    for(auto s : _args){
+        std::cout << s << " ";
+    }
+    std::cout << std::endl;
+}
+
+
+void ProgFunction::parse(){
+    auto it = _myToken.string_value.begin();
+    auto end = _myToken.string_value.end();
+    while(it != end && *it != '('){
+        _name += *it;
+        ++it;
+    }
+    ++it;
+    std::string arg;
+    while((it+1) != end ){
+        if(*it != ','){
+            arg += *it;
+        } else {
+            _args.push_back(arg);
+            arg = "";
+        }
+        ++it;
+    }
+    _args.push_back(arg);
+}
+
+double ProgFunction::eval(Program &p){
+    //TODO
+    return 0;
+}
