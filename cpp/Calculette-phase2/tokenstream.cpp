@@ -128,22 +128,26 @@ Token TokenStream::get() {
                 while (ip->get(ch) && std::isalnum(ch)){
                     ct.string_value += ch;
                 }
+                while(std::isspace(ch)) ip->get(ch);
                 //token is function :
                 if(ch == '('){
                     ct.kind = Kind::fct;
                     ct.string_value += ch;
                     int parenthesisLevel = 0;
-                    while(ip->get(ch) && ch != '\n' && ch != ';'){
+                    bool good = false;
+                    while(ip->get(ch) && !good){
                         ct.string_value += ch;
                         if(ch == ')'){
                             if(parenthesisLevel == 0)
-                                break;
+                                good = true;
                             else
-                                parenthesisLevel += 1;
+                                parenthesisLevel -= 1;
                         } else if(ch == '(') {
                             parenthesisLevel += 1;
                         }
                     }
+                    if(!good)
+                        throw TokenStream::Error("Missing ')' in "+ct.string_value);
                     ct.fct = new ProgFunction(ct);
                 }
                 if(ch != ')') ip->putback(ch);

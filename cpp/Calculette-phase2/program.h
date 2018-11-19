@@ -29,9 +29,11 @@ public:
     void print() const;
 
     /// Returns the value of the expression.
-    double eval();
+    double eval(bool donotprint=false);
 
     void dump_memory();
+
+    void setTokenStream(TokenStream &ts);
 private:
 
     void tokenize(TokenStream &ts);

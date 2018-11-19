@@ -6,6 +6,7 @@
 #define POACPP_TOKENSTREAM_HEADER__
 #include <iostream> // I/O
 #include <vector>
+#include <functional>
 
 class Token;
 class Program;
@@ -29,6 +30,7 @@ public:
 
     private:
     void parse();
+    std::function<double (std::vector<double>)> getFunctionLambda();
     Token &_myToken;
     std::string _name;
     std::vector<std::string> _args;
@@ -55,7 +57,8 @@ struct Token {
 
     Token(const Kind &k, const std::string &s="", double v=0) : kind(k), string_value{s}, number_value(v) {};
     ~Token(){
-        if(fct != nullptr) delete fct;
+        //TODO fix memory leak without breaking program
+        //if(fct != nullptr) delete fct;
     }
 
     friend std::ostream &operator<<(std::ostream &os, const Token &t);

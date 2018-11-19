@@ -27,8 +27,7 @@ void Program::print() const {
     std::cout << std::endl;
 }
 
-double Program::eval() {
-    bool donotprint = false;
+double Program::eval(bool donotprint) {
     double value;
     std::stack<double> res_stack;
 
@@ -65,9 +64,9 @@ double Program::eval() {
                 res_stack.push(value);
             }
         } else if (t.isFunction()) {
-            //TODO
-            std::cout << "Function " << t << std::endl;
-             res_stack.push(t.fct->eval(*this));
+            if(!donotprint)
+                std::cout << t << "= ";
+            res_stack.push(t.fct->eval(*this));
         } else {
             // store value in memory
             value = res_stack.top();
@@ -141,4 +140,11 @@ void Program::dump_memory() {
     std::cout << std::endl << "Calculator memory : " << std::endl;
     for (const auto &e: _memory)
         std::cout << e.first << "=" << e.second << std::endl;
+}
+
+void Program::setTokenStream(TokenStream &ts){
+    _infix.clear();
+    _rpn.clear();
+    tokenize(ts);
+    parse();
 }

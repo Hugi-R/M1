@@ -14,12 +14,17 @@
 
 int main(int argc, char *argv[]) {
 
-    /*std::string test_expr[]{
+    std::string test_expr[]{
             "17-24/4*3+2;",
             "(4*2+3*6)/13;\n8*9-1\n3+1",
-            "deuxpi = 2 * 3.1415926536;\nrayon = 3*8;\ncirconference = deuxpi * rayon;\ncirconference"
+            "deuxpi = 2 * 3.1415926536;\nrayon = 3*8;\ncirconference = deuxpi * rayon;\ncirconference",
+            "pi = 3.1415926536;\ncos(pi)\ncos(2*pi)\nsin(pi)\ntan(pi)\nlerp(0,1,1)\nhypot(1,1)",
+            "sqrt(pow(2,2))\nlog(exp(3))",
+            "x = 1;\npolynome(3,1,2,3,x)",
+            "x = 2;\npolynome(4,0,0,0,1,x)",
+            "x = 2;\nsqrt(a=2;x*2)"
     };
-    constexpr auto num_test = std::extent<decltype(test_expr)>::value;*/
+    constexpr auto num_test = std::extent<decltype(test_expr)>::value;
 
     // Input token stream
     TokenStream ts{std::cin};
@@ -29,7 +34,7 @@ int main(int argc, char *argv[]) {
         case 1:
             std::cout << "Enter your expression (<Ctrl-D> to terminate) : " << std::endl;
             break;
-        /*case 2: {
+        case 2: {
                 auto nt = decltype(num_test)(std::atoi(argv[1]));
                 if (nt < num_test) {
                     std::cout << "----------------" << std::endl << "Executing test " << nt << " : " << std::endl
@@ -41,7 +46,7 @@ int main(int argc, char *argv[]) {
                     return 1;
                 }
             }
-            break;*/
+            break;
         default:
             std::cerr << "Too many arguments !" << std::endl;
             return 1;
@@ -63,6 +68,8 @@ int main(int argc, char *argv[]) {
     } catch (const TokenStream::Error &e) {
         std::cerr << e.what() << std::endl;
     } catch (const Program::Error &e) {
+        std::cerr << e.what() << std::endl;
+    } catch (const ProgFunction::Error &e) {
         std::cerr << e.what() << std::endl;
     }
 
