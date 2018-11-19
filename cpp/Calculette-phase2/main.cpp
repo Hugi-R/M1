@@ -1,15 +1,13 @@
 /*
  * Master Informatique - Programmation C++
- *   Corrigé indicatif BE 2017 - Partie 1
- *
- *   Générer le makefile avec cmake (https://cmake.org/)
+ * Phase 2
  *
  */
 
 #include "tokenstream.h"
 #include "program.h"
 
-#include <sstream>  // String stream
+#include <sstream>
 
 
 int main(int argc, char *argv[]) {
@@ -22,7 +20,7 @@ int main(int argc, char *argv[]) {
             "sqrt(pow(2,2))\nlog(exp(3))",
             "x = 1;\npolynome(3,1,2,3,x)",
             "x = 2;\npolynome(4,0,0,0,1,x)",
-            "x = 2;\nsqrt(a=2;x*2)"
+            "x = 2;\nsqrt(y=2;pow(x,y))" // si si ça marche
     };
     constexpr auto num_test = std::extent<decltype(test_expr)>::value;
 

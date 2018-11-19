@@ -148,7 +148,7 @@ Token TokenStream::get() {
                     }
                     if(!good)
                         throw TokenStream::Error("Missing ')' in "+ct.string_value);
-                    ct.fct = new ProgFunction(ct);
+                    ct.fct = std::make_shared<ProgFunction>(ct);
                 }
                 if(ch != ')') ip->putback(ch);
                 return ct;

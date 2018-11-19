@@ -7,6 +7,7 @@
 #include <iostream> // I/O
 #include <vector>
 #include <functional>
+#include <memory>
 
 class Token;
 class Program;
@@ -53,13 +54,9 @@ struct Token {
     Kind kind;
     std::string string_value;
     double number_value;
-    ProgFunction *fct{nullptr};
+    std::shared_ptr<ProgFunction> fct{nullptr};
 
     Token(const Kind &k, const std::string &s="", double v=0) : kind(k), string_value{s}, number_value(v) {};
-    ~Token(){
-        //TODO fix memory leak without breaking program
-        //if(fct != nullptr) delete fct;
-    }
 
     friend std::ostream &operator<<(std::ostream &os, const Token &t);
 
