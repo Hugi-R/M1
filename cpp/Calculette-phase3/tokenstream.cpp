@@ -29,6 +29,16 @@ bool Token::isFunction() const {
     return kind == Kind::fct;
 }
 
+bool Token::isAssign() const {
+    return kind == Kind::assign;
+}
+
+double Token::eval(Program &p) const{
+    if(isAssign())
+        return fct->eval(p);
+    return number_value;
+}
+
 
 int Token::compare(const Token &other) const {
     if (kind == Kind::minus || kind == Kind::plus)

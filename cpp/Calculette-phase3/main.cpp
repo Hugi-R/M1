@@ -20,7 +20,8 @@ int main(int argc, char *argv[]) {
             "sqrt(pow(2,2))\nlog(exp(3))",
             "x = 1;\npolynome(3,1,2,3,x)",
             "x = 2;\npolynome(4,0,0,0,1,x)",
-            "x = 2;\nsqrt(y=2;pow(x,y))" // si si ça marche
+            "x = 2;\nsqrt(y=2;pow(x,y))", // si si ça marche
+            "l = lerp(0,1); l(1)"
     };
     constexpr auto num_test = std::extent<decltype(test_expr)>::value;
 

@@ -5,7 +5,7 @@
 #define POACPP_PROGRAM_HEADER__
 
 #include <list>
-#include<map>
+#include <map>
 
 #include "tokenstream.h"
 
@@ -43,7 +43,7 @@ private:
 private:
 
     // Calculator memory - may be pre-filled
-    std::map<std::string, double> _memory {
+    std::map<std::string, Token> _memory {
 //            {"pi",    3.1415926535897932385},
 //            {"e",     2.7182818284590452354},
 //            {"sqrt2", 1.414213562373095}

@@ -26,7 +26,7 @@ public:
     ProgFunction(Token &myToken);
 
     double eval(Program &p);
-    
+
     static double parse(std::string s);
 
     private:
@@ -56,7 +56,8 @@ struct Token {
     double number_value;
     std::shared_ptr<ProgFunction> fct{nullptr};
 
-    Token(const Kind &k, const std::string &s="", double v=0) : kind(k), string_value{s}, number_value(v) {};
+    Token(const Kind &k=Kind::end, const std::string &s="", double v=0) : kind(k), string_value{s}, number_value(v) {};
+    Token(double v) : kind(Kind::number), string_value(std::to_string(v)), number_value(v) {};
 
     friend std::ostream &operator<<(std::ostream &os, const Token &t);
 
@@ -74,6 +75,10 @@ struct Token {
 
     /// Returns true if the token is a function.
     bool isFunction() const;
+
+    bool isAssign() const;
+
+    double eval(Program &p) const;
 
     /// Returns -1 if the given token has a higher priority, 1 if lower
     /// and 0 if they are the same.

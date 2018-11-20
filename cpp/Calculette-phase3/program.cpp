@@ -29,7 +29,7 @@ void Program::print() const {
 
 double Program::eval(bool donotprint) {
     double value;
-    std::stack<double> res_stack;
+    std::stack<Token> res_stack;
 
     for (const auto &t : _rpn) {
         // use memory here if token == name
@@ -37,7 +37,7 @@ double Program::eval(bool donotprint) {
             res_stack.push(t.number_value);
         } else if (t.isSeparator()) {
             if (!res_stack.empty()) {
-                value = res_stack.top();
+                value = res_stack.top().eval(*this);
                 res_stack.pop();
             }
             if (t.kind == Kind::next)
@@ -48,9 +48,9 @@ double Program::eval(bool donotprint) {
                 donotprint = false;
             }
         } else if (t.isOperator()) {
-            auto op2 = res_stack.top();
+            auto op2 = res_stack.top().eval(*this);
             res_stack.pop();
-            auto op1 = res_stack.top();
+            auto op1 = res_stack.top().eval(*this);
             res_stack.pop();
             value = t.operate(op1, op2);
             res_stack.push(value);
@@ -60,17 +60,19 @@ double Program::eval(bool donotprint) {
             if (variable == _memory.end()) {
                 throw Program::Error("Identifier not found : " + t.string_value);
             } else {
-                value = variable->second;
+                value = variable->second.eval(*this);
                 res_stack.push(value);
             }
         } else if (t.isFunction()) {
             if(!donotprint)
                 std::cout << t << "= ";
             res_stack.push(t.fct->eval(*this));
-        } else {
+        } else if (t.isAssign()){
             // store value in memory
-            value = res_stack.top();
-            _memory[t.string_value] = value;
+            Token val = res_stack.top();
+            _memory[t.string_value] = val;
+        } else {
+            throw Program::Error("Unknow Token : "+t.string_value);
         }
     }
     return value;
