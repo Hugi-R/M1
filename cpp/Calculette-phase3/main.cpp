@@ -1,6 +1,6 @@
 /*
  * Master Informatique - Programmation C++
- * Phase 2
+ * Phase 3
  *
  */
 
