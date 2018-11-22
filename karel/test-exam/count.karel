@@ -1,0 +1,26 @@
+BEGINNING-OF-PROGRAM
+	BEGINNING-OF-EXECUTION
+		
+		COUNT beeps0
+			RESET beeps1;
+
+		COUNT beeps1
+			WHILE front-is-clear DO
+				move;
+
+		IF front-is-clear THEN
+			COUNT beeps1
+				turnleft;
+		
+		IF front-is-clear THEN
+			COUNT beeps1
+				turnleft
+		ELSE
+			move;
+
+    turnoff
+
+	END-OF-EXECUTION
+END-OF-PROGRAM
+
+

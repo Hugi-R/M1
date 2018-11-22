@@ -35,8 +35,13 @@ type token =
   | ELSE
   | DEFINE_NEW
   | AS
+  | RESET
+  | COUNT
+  | FROM
+  | TO
   | INT of (int)
   | ID of (string)
+  | BEEPS of (int)
   | SEMI
   | BEGIN
   | END

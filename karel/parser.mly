@@ -5,6 +5,10 @@ open Common
 open Comp
 open Karel
 
+let zero = new_temp();;
+let one = new_temp();;
+let beeps = [| new_temp(); new_temp(); new_temp(); new_temp() |];;
+let beeps_global = new_temp();;
 
 %}
 
@@ -47,9 +51,14 @@ open Karel
 %token ELSE
 %token DEFINE_NEW
 %token AS
+%token RESET
+%token COUNT
+%token FROM
+%token TO
 
 %token <int> INT
 %token <string> ID
+%token <int> BEEPS
 
 %token SEMI
 %token BEGIN
@@ -64,7 +73,7 @@ Le conflit IF-THEN-ELSE sera donc résolu en faisant un shift sur ELSE */
 
 %%
 
-start_prog : /* empty */ {let a = nextquad () in gen (GOTO 0); a}
+start_prog : /* empty */ {gen (SETI (zero, 0));gen (SETI (one, 1));gen (SETI (beeps_global, 0));let a = nextquad () in gen (GOTO 0); a}
 
 prog:	BEGIN_PROG start_prog define BEGIN_EXEC adr stmts_opt END_EXEC END_PROG
 			{ backpatch $2 $5; gen (STOP) } /* add stop at the end */
@@ -91,7 +100,8 @@ stmt:		simple_stmt
 adr : /* empty */ { nextquad () }
 ;
 
-iter : INT { let cpt = new_temp () in gen (SETI (cpt, 0)); let one = new_temp () in gen (SETI (one, 1)); let n = new_temp () in gen (SETI (n, $1)); let startl = nextquad () in gen (GOTO_EQ (0, cpt, n)); gen (ADD (cpt, cpt, one)); startl }
+iter : INT { let cpt = new_temp () in gen (SETI (cpt, 0)); let n = new_temp () in gen (SETI (n, $1)); let startl = nextquad () in gen (GOTO_EQ (0, cpt, n)); gen (ADD (cpt, cpt, one)); startl }
+| BEEPS { let cpt = new_temp () in gen (SETI (cpt, 0)); let startl = nextquad () in gen (GOTO_EQ (0, cpt, beeps.($1))); gen (ADD (cpt, cpt, one)); startl }
 ;
 
 else_ : ELSE { let a = nextquad () in gen (GOTO 0); a }
@@ -102,7 +112,7 @@ simple_stmt: TURN_LEFT
 |			TURN_OFF
 				{ gen STOP  }
 |			MOVE
-				{ gen (INVOKE (move, 0, 0)) }
+				{ gen (INVOKE (move, 0, 0)); let d = new_temp () in gen (INVOKE (next_beeper, d, 0)); let a = nextquad() in gen (GOTO_EQ (0, d, zero)); gen (ADD (beeps_global, beeps_global, one)); backpatch a (nextquad()) }
 |			PICK_BEEPER
 				{ gen (INVOKE (pick_beeper, 0, 0)) }
 |			PUT_BEEPER
@@ -113,7 +123,14 @@ simple_stmt: TURN_LEFT
 |			IF if_test THEN stmt { backpatch $2 (nextquad ()) }
 |			IF if_test THEN stmt else_ adr stmt { backpatch $2 ($6); backpatch $5 (nextquad ()) }
 |			ID { if is_defined $1 then gen (CALL (get_define $1)) else (raise (SyntaxError "ID not defined")) }
+|			RESET BEEPS {gen (SETI (beeps.($2), 0))}
+|			COUNT BEEPS init_count stmt {let cpt = new_temp() in gen (SUB (cpt, beeps_global, $3)); gen (SET (beeps.($2), cpt)) }
+|			fromto stmt {}
 ;
+
+fromto : FROM BEEPS TO BEEPS { let cpt = new_temp () in gen (SET (cpt, beeps.($2))); let startl = nextquad () in gen (GOTO_EQ (0, cpt, beeps.($4))); gen (ADD (cpt, cpt, one)); backpatch startl (nextquad()) }
+
+init_count : /* */ {let tmp = new_temp() in gen (SET (tmp, beeps_global)); tmp}
 
 test:
 	FRONT_IS_CLEAR {let d = new_temp () in gen (INVOKE (is_clear, front, d)); d}
@@ -143,10 +160,8 @@ define_new:
 ;
 
 if_test : test {
-	let z = new_temp () in
-	let _ = gen (SETI (z, 0)) in
 	let a = nextquad () in
-	let _ = gen (GOTO_EQ (0, $1, z)) in
+	let _ = gen (GOTO_EQ (0, $1, zero)) in
 	a
 }
 ;

@@ -6,6 +6,7 @@ let comment = '{' [^ '}']* '}'
 let space = [' ' '\t' '\n']+
 let integer = ['0'-'9']+
 let identifier = ['_' 'a'-'z']['_' 'a'-'z' '0'-'9']*
+let beeps = ['b' 'B']['e' 'E']['e' 'E']['p' 'P']['s' 'S']
 
 rule scan =
 parse	"BEGINNING-OF-PROGRAM"		{ BEGIN_PROG }
@@ -51,7 +52,12 @@ parse	"BEGINNING-OF-PROGRAM"		{ BEGIN_PROG }
 |       "ELSE"                      { ELSE }
 |       "DEFINE-NEW-INSTRUCTION"    { DEFINE_NEW }
 |       "AS"                        { AS }
+|       "RESET"                     { RESET }
+|       "COUNT"                     { COUNT }
+|       "FROM"                     { FROM }
+|       "TO"                     { TO }
 
+|       beeps (integer as i)       {BEEPS (int_of_string(i))}
 |       identifier as id            { ID (id) }
 
 |		";"							{ SEMI }
