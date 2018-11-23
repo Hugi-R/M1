@@ -1,0 +1,40 @@
+Dijkstra
+Parallèle
+Rapport en binome
+Loi d'Amdahl
+Page de garde
+Fautes
+Logique
+Eviter le conditionnel
+Justifier le texte
+Justifier boucle parallelisable/pas para
+Verifier que le résultat de la para est correct (diff)
+Dans rapport donner la config
+
+Amdahl : estimation du speedup théorique max
+prog seq : execute en tseq unité de temps
+s : proportion du code seq non para. 0<s<=1
+speedup theorique max speedup(N) = 1/(s+(1-s)/N) = Tseq/Tpar
+1 <= speedup(N) < N
+speedup(N) est croissant
+speedup(N) -(N->+infinity)-> 1/s borné
+speedup(N) -(S->0)-> N borné
+
+Graphes:
+1e : test si ça marche
+Rome : test
+New-York : 10-15 min en seq
+
+Mesure temps:
+double omp_get_wtime()
+100 mesures, prendre la + petite pour éviter le bruit (autres prog qui tournent)
+faire gaffe au cache sur la 1er exec
+
+OMP:
+compiler avec -fopenmp
+omp parallel num_thread(N) private(_)
+omp for
+omp single
+omp barrier
+omp atomic
+omp critical 
