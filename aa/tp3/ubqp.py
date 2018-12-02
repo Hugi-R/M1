@@ -119,7 +119,7 @@ def tsp_read(path):
 
 def tsp_trip_length(x):
     coord = lambda c : (c[1],c[2])
-    dist = lambda a,b : math.sqrt((a[0]+b[0])**2 + (a[1]+b[1])**2)
+    dist = lambda a,b : math.sqrt(math.pow(a[0]-b[0],2) + math.pow(a[1]-b[1],2))
     trip = dist((0,0),coord(x[0]))
     for i in range(len(x)-1):
         trip += dist(coord(x[i]), coord(x[i+1]))
@@ -148,13 +148,16 @@ def tsp_speepest_hill_climbing(cities,max_step,nb_restart):
         rstart = time.time()
         x = copy.copy(cities)
         np.random.shuffle(x)
+        x_value = tsp_trip_length(x)
         nb_step = 0
         stop = False
         while(nb_step < max_step and not stop):
             sstart = time.time()
             tmp_x = tsp_best_neighbour(x)
-            if(tsp_trip_length(tmp_x) < tsp_trip_length(x)):
+            v = tsp_trip_length(tmp_x)
+            if( v < x_value):
                 x = copy.copy(tmp_x)
+                x_value = v
             else:
                 stop = True
             nb_step += 1
@@ -223,10 +226,14 @@ print(x3,f(q,x3))
 x3 = taboo(q,n,1,2*n)
 print(x3,f(q,x3))
 '''
+
 cities,n = tsp_read("tsp101.txt")
 print(cities, n)
 print(tsp_trip_length(cities))
-x = tsp_speepest_hill_climbing(cities,2*n,1)
+x = tsp_speepest_hill_climbing(cities,n,5)
 print(x, tsp_trip_length(x))
-x2 = tsp_taboo(cities,10,2*n)
-print(x2, tsp_trip_length(x2))
+#x2 = tsp_taboo(cities,n,2*n)
+#print(x2, tsp_trip_length(x2))
+
+#x = [(1,40,50),(2,25,85),(4,22,85),(5,20,80),(3,22,75)]
+#print(tsp_trip_length(x))
