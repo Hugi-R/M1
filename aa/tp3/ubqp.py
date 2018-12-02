@@ -175,7 +175,8 @@ def tsp_best_neighbour_not_taboo(x,taboo):
 
 def tsp_taboo(cities,taboo_size,max_step):
     taboo = []
-    x = np.random.shuffle(cities)
+    x = cities
+    np.random.shuffle(x)
     best_x = []
     best_value = inf
     step = 0
