@@ -1,10 +1,11 @@
 import numpy as np
 import copy
 import math
+import time
 from math import inf
 
 def rand_x(n):
-    return np.random.randint(0,2,n)
+    return np.random.randint(0,2,n).tolist()
 
 def f(q,x):
     sum = 0
@@ -76,7 +77,7 @@ def best_neighbour_not_taboo(x,q,taboo):
     for i in range(len(x)):
         tmp_x = copy.copy(x)
         tmp_x[i] = (tmp_x[i]+1)%2
-        if set(np.unique(tmp_x)) not in set(np.unique(taboo)):
+        if tmp_x not in taboo:
             v = f(q, tmp_x)
             if( v < best_value):
                 best_value = v
@@ -128,49 +129,57 @@ def tsp_trip_length(x):
 def tsp_best_neighbour(x):
     best_x = []
     best_value = inf
+    tmp_x = x.copy()
     for i in range(len(x)):
         for j in range(i+1,len(x)):
-            tmp_x = copy.copy(x)
             tmp_x[i], tmp_x[j] = tmp_x[j], tmp_x[i]
             v = tsp_trip_length(tmp_x)
             if v < best_value:
-                best_x = copy.copy(tmp_x)
+                best_x = tmp_x.copy()
                 best_value = v
+            #re-swap to have tmp_x == x
+            tmp_x[i], tmp_x[j] = tmp_x[j], tmp_x[i]
     return best_x
 
 def tsp_speepest_hill_climbing(cities,max_step,nb_restart):
     best_x = []
     best_value = inf
-    for _ in range(nb_restart):
+    for restart in range(nb_restart):
+        rstart = time.time()
         x = copy.copy(cities)
         np.random.shuffle(x)
         nb_step = 0
         stop = False
         while(nb_step < max_step and not stop):
+            sstart = time.time()
             tmp_x = tsp_best_neighbour(x)
             if(tsp_trip_length(tmp_x) < tsp_trip_length(x)):
                 x = copy.copy(tmp_x)
             else:
                 stop = True
             nb_step += 1
+            print("Step : ", nb_step, time.time()-sstart)
         v = tsp_trip_length(x)
         if( v < best_value):
             best_x = copy.copy(x)
             best_value = v
+        print("Restart : ", restart, time.time()-rstart)
     return best_x
 
 def tsp_best_neighbour_not_taboo(x,taboo):
     best_x = []
     best_value = inf
+    tmp_x = x.copy()
     for i in range(len(x)):
         for j in range(i+1,len(x)):
-            tmp_x = copy.copy(x)
             tmp_x[i], tmp_x[j] = tmp_x[j], tmp_x[i]
-            if set(np.unique(tmp_x)) not in set(np.unique(taboo)):
+            if tmp_x not in taboo:
                 v = tsp_trip_length(tmp_x)
                 if v < best_value:
-                    best_x = copy.copy(tmp_x)
+                    best_x = tmp_x.copy()
                     best_value = v
+            #re-swap to have tmp_x == x
+            tmp_x[i], tmp_x[j] = tmp_x[j], tmp_x[i]
     return best_x
 
 def tsp_taboo(cities,taboo_size,max_step):
@@ -182,6 +191,7 @@ def tsp_taboo(cities,taboo_size,max_step):
     step = 0
     stop = False
     while(step < max_step and not stop):
+        start = time.time()
         tmp_x = tsp_best_neighbour_not_taboo(x,taboo)
         if len(tmp_x) == 0:
             stop = True
@@ -195,6 +205,7 @@ def tsp_taboo(cities,taboo_size,max_step):
                 best_value = v
             x = copy.copy(tmp_x)
             step += 1
+        print("step : ", step, time.time()-start)
     return best_x
 
 '''
@@ -215,7 +226,7 @@ print(x3,f(q,x3))
 cities,n = tsp_read("tsp101.txt")
 print(cities, n)
 print(tsp_trip_length(cities))
-#x = tsp_speepest_hill_climbing(cities,n,5)
-#print(x, tsp_trip_length(x))
-x2 = tsp_taboo(cities,n,2*n)
+x = tsp_speepest_hill_climbing(cities,2*n,1)
+print(x, tsp_trip_length(x))
+x2 = tsp_taboo(cities,10,2*n)
 print(x2, tsp_trip_length(x2))
