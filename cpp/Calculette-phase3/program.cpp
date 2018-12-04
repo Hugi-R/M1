@@ -8,6 +8,7 @@
 #include <sstream>
 
 Program::Program(TokenStream &ts) {
+    build_function_table();
     tokenize(ts);
     parse();
 }
@@ -147,4 +148,33 @@ void Program::setTokenStream(TokenStream &ts){
     _rpn.clear();
     tokenize(ts);
     parse();
+}
+
+void Program::build_function_table() {
+    _functions[std::string("sin")]=std::make_pair(1, [](const DoubleParams& x)->double{return std::sin(x[0]);});
+    _functions[std::string("cos")]=std::make_pair(1, [](const DoubleParams& x)->double{return std::cos(x[0]);});
+    _functions[std::string("tan")]=std::make_pair(1, [](const DoubleParams& x)->double{return std::tan(x[0]);});
+    _functions[std::string("sqrt")]=std::make_pair(1, [](const DoubleParams& x)->double{return std::sqrt(x[0]);});
+    _functions[std::string("log")]=std::make_pair(1, [](const DoubleParams& x)->double{return std::log(x[0]);});
+    _functions[std::string("exp")]=std::make_pair(1, [](const DoubleParams& x)->double{return std::exp(x[0]);});
+    _functions[std::string("pow")]=std::make_pair(2, [](const DoubleParams& p)->double{return std::pow(p[0], p[1]);});
+    _functions[std::string("hypot")]=std::make_pair(2, [](const DoubleParams& p)->double{return std::hypot(p[0], p[1]);});
+    _functions[std::string("lerp")]=std::make_pair(3, [](const DoubleParams& p)->double{return (1-p[2])*p[0] + p[2]*p[1];});
+
+    _functions[std::string("polynome")]=std::make_pair
+            (	-1,
+                 [](const DoubleParams& x)->double {
+                    if (x.size() != x[0]+2)
+                        throw Program::Error("polynome() - wrong number of arguments.");
+                    double res = 0;
+                    for(int i = 1; i <= x[0]; ++i){
+                        res += std::pow(x[x.size()-1],i)*x[i];
+                    }
+                    return res;
+                 }
+            );
+}
+
+InternalFunction Program::getFunction(std::string name){
+    return _functions[name];
 }

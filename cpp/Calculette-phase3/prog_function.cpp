@@ -52,42 +52,10 @@ double ProgFunction::eval(Program &p){
         parser.setTokenStream(ts);
         argsValue.push_back(parser.eval(true));
     }
-    auto fct = getFunctionLambda();
-    return fct(argsValue);
-}
-
-std::function<double (std::vector<double>)> ProgFunction::getFunctionLambda(){
-    if(_name == "cos")
-        return [](std::vector<double> x){if(x.size() != 1) throw ProgFunction::Error("Arguments error"); else return std::cos(x[0]);};
-    if(_name == "sin")
-        return [](std::vector<double> x){if(x.size() != 1) throw ProgFunction::Error("Arguments error" ); else return std::sin(x[0]);};
-    if(_name == "tan")
-        return [](std::vector<double> x){if(x.size() != 1) throw ProgFunction::Error("Arguments error"); else return std::tan(x[0]);};
-    if(_name == "sqrt")
-        return [](std::vector<double> x){if(x.size() != 1) throw ProgFunction::Error("Arguments error"); else return std::sqrt(x[0]);};
-    if(_name == "log")
-        return [](std::vector<double> x){if(x.size() != 1) throw ProgFunction::Error("Arguments error"); else return std::log(x[0]);};
-    if(_name == "exp")
-        return [](std::vector<double> x){if(x.size() != 1) throw ProgFunction::Error("Arguments error"); else return std::exp(x[0]);};
-    if(_name == "pow")
-        return [](std::vector<double> x){if(x.size() != 2) throw ProgFunction::Error("Arguments error"); else return std::pow(x[0],x[1]);};
-    if(_name == "hypot")
-        return [](std::vector<double> x){if(x.size() != 2) throw ProgFunction::Error("Arguments error"); else return std::sqrt(x[0]*x[0]+x[1]*x[1]);};
-    if(_name == "lerp")
-        return [](std::vector<double> x){if(x.size() != 3 || x[2]<0 || x[2]>1) throw ProgFunction::Error("Arguments error"); else return (1 - x[2]) * x[0] + x[2] * x[1];};
-    if(_name == "polynome"){
-        return [](std::vector<double> x){
-            if(x.size() < 3 || (x.size()-2) != x[0]){
-                throw ProgFunction::Error("Arguments error");
-            } else {
-                double res = 0;
-                for(int i = 1; i <= x[0]; ++i){
-                    res += std::pow(x[x.size()-1],i)*x[i];
-                }
-                return res;
-            }
-        };
+    auto fct = p.getFunction(_name);
+    if((fct.first != -1) && ((uint)fct.first != argsValue.size())){
+        throw ProgFunction::Error("Arguments error");
     }
-    
-    throw ProgFunction::Error("Unknow function : "+_name);
+    double res = fct.second(argsValue);
+    return res;
 }

@@ -5,9 +5,14 @@
 #define POACPP_PROGRAM_HEADER__
 
 #include <list>
-#include<map>
+#include <map>
+#include <cmath>
 
 #include "tokenstream.h"
+
+using DoubleParams = std::vector<double>;
+using Function = std::function<double(DoubleParams)>;
+using InternalFunction = std::pair<int, Function>;
 
 class Program {
 public:
@@ -34,11 +39,15 @@ public:
     void dump_memory();
 
     void setTokenStream(TokenStream &ts);
+
+    InternalFunction getFunction(std::string name);
 private:
 
     void tokenize(TokenStream &ts);
 
     void parse();
+
+    void build_function_table();
 
 private:
 
@@ -52,6 +61,8 @@ private:
     // Program representations.
     std::list<Token> _infix;
     std::list<Token> _rpn;
+
+    std::map<std::string, InternalFunction> _functions;
 };
 
 #endif // POACPP_PROGRAM_HEADER__
