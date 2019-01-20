@@ -81,7 +81,8 @@ class KMeans(object):
             self.cluster_centers[:n_data] = X
         else:
             # Initialisation des centroides
-            self.cluster_centers = X[:self.n_clusters,:]
+            pick = np.random.randint(0, n_data, self.n_clusters, int)
+            self.cluster_centers = [X[i] for i in pick]
 
             # initialisation d'un paramètre permettant de stopper les itérations lors de la convergence
             stabilise = False
@@ -106,8 +107,7 @@ class KMeans(object):
                 # stoppe l'algorithme si la somme des distances quadratiques entre
                 # 2 itérations est inférieur au seuil de tolérance
                 if self.early_stopping:
-                    # A compléter
-                    #stabilise = ....
+                    stabilise = abs(old_distance - current_distance) < self.tol
                     if stabilise:
                         break
 

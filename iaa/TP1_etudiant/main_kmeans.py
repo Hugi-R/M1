@@ -5,8 +5,8 @@ from utils import load_dataset
 
 
 def main():
-    filepath = "./data/self_test.csv"
-    #filepath = "./data/iris.csv"
+    #filepath = "./data/self_test.csv"
+    filepath = "./data/iris.csv"
 
     # chargement des données
     data, labels = load_dataset(filepath)
