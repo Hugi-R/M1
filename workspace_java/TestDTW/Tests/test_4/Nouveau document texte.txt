@@ -1,6 +1,0 @@
-hyp\ref, tournedroite , atterrissage , plushaut , droite , etatdurgence , tournegauche , plusbas , faisunflip , gauche , avance , recule , decollage , arretetoi 
-tourneadroite   	, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0
-avance   	, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0
-droite   	, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0
-recule   	, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0
-arretetoi   	, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2
