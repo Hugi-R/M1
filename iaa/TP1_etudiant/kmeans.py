@@ -4,6 +4,8 @@ import shutil
 
 import numpy as np
 
+import math
+
 from utils import plot_training
 
 
@@ -24,6 +26,8 @@ class KMeans(object):
         """
         assert len(vec1) == len(vec2), "Vectors must be same dimension"
         return sum((vec1-vec2)**2)
+        #return sum(abs(vec1-vec2))
+        #return max(abs(vec1-vec2))
 
 
     def _compute_inertia(self, X:np.ndarray, y:np.ndarray) -> float:
@@ -40,10 +44,8 @@ class KMeans(object):
     def _update_centers(self, X:np.ndarray, y:np.ndarray) -> None:
         """Recalcule les coordonnées des centres des clusters
         """
-        pass
         for i in range(self.n_clusters):
             cluster = [X[j] for j in range(len(X)) if y[j] == i]
-            print(cluster)
             self.cluster_centers[i] = sum(cluster)/len(cluster)
 
     def predict(self, X:np.ndarray) -> np.ndarray:
@@ -81,8 +83,7 @@ class KMeans(object):
             self.cluster_centers[:n_data] = X
         else:
             # Initialisation des centroides
-            pick = np.random.randint(0, n_data, self.n_clusters, int)
-            self.cluster_centers = [X[i] for i in pick]
+            self.cluster_centers = np.array([X[i] for i in np.random.randint(0, n_data, self.n_clusters, int)])
 
             # initialisation d'un paramètre permettant de stopper les itérations lors de la convergence
             stabilise = False
