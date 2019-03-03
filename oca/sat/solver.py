@@ -1,56 +1,94 @@
-
-
+import types
+import itertools
+import numpy as np
 import utils
 
-def get_vars(clause:list):
-    return list(map(abs, clause))
+sign = lambda x: -1 if x < 0 else 1
 
-def get_sol_vars(sol:list):
-    return list(map(lambda x: x[0], sol))
+def pass_one(solution:list, literal):
+    for v in solution:
+        if v[0]*v[1] == literal:
+            return True
+        elif v[0]*v[1] == -literal:
+            return False
+    return literal
 
-def clause_in_sol(sol:list, clause:list):
-    sol_vars = get_sol_vars(sol)
-    return all(map(lambda x: x in sol_vars, get_vars(clause)))
+def apply_sol(solution:list, clauses:list):
+    cs2 = []
+    for c in clauses:
+        c2 = []
+        valid = False
+        for l in c:
+            po = pass_one(solution, l)
+            if type(po) == bool :
+                if po :
+                    valid = True
+                    break
+            else:
+                c2.append(po)
+        if not valid :
+            cs2.append(c2 if c2 != [] else False)
+    return cs2
+    
+
+def sol_invalid_literal(solution:list, literal):
+    for v in solution:
+        if v[0]*v[1] == literal:
+            return False
+        elif v[0]*v[1] == -literal:
+            return True
+    return False
+
+def sol_dont_make_clause_false(solution:list, clause:list):
+    sil = lambda literal: sol_invalid_literal(solution, literal)
+    return not all(map(sil, clause))
+
+# still here for testing
+def old_check_consistency(solution:list, clauses:list):
+    if not solution : # if empty, solution valid
+        return True 
+    else:
+        tmp = lambda clause: sol_dont_make_clause_false(solution, clause)
+        return all(map(tmp, clauses))
 
 def check_consistency(solution:list, clauses:list):
     if not solution : # if empty, solution valid
         return True 
-    valid = [True]*len(clauses)
-    for i in range(len(clauses)):
-        if clause_in_sol(solution, clauses[i]):
-            for v in solution:
-                if v[0]*v[1] in clauses[i]:
-                    valid[i] = True
-                    break # The clause is valid thanks to v
-                elif -(v[0]*v[1]) in clauses[i]:
-                    valid[i] = False
-        else:
-            valid[i] = True
-        #print(i, valid)
-    if valid.count(False) == 0:
-        return True
-    return False
+    else:
+        return all(apply_sol(solution, clauses))
 
-def select(solution:list, clauses:list, var:list):
-    for v in var:
-        if not v in list(map(lambda x: x[0], solution)):
-            return (v, 1, -1)
+
+
+def select(current_clauses:list):
+    unit = list(filter(lambda x: len(x) == 1 if type(x) == list else False, current_clauses))
+    if unit :
+        return (sign(unit[0][0])*unit[0][0], sign(unit[0][0]), None)
+
+    fast_var = np.unique(list(itertools.chain.from_iterable(current_clauses)))
+
+    t = lambda x: not -x in fast_var
+    pure = list(filter(t, fast_var))
+    if pure :
+        return (sign(pure[0])*pure[0], sign(pure[0]), None)
+
+    return (sign(fast_var[0])*fast_var[0], 1, -1)
 
 def backtrack(var:list, clauses:list):
     nb_var = len(var)
     finished = False
     sol = []
+    prev_clauses = clauses
     m = 0
     while not finished:
-        if len(sol) > m:
-            m = len(sol)
-        print(len(sol), " ", m)
-        if check_consistency(sol, clauses):
-            if len(sol) == nb_var :
+        current_clauses = apply_sol(sol, prev_clauses)
+        if all(current_clauses): #check consistency
+            prev_clauses = current_clauses
+            if current_clauses == [] :
                 finished = True
             else:
-                sol.append(select(sol, clauses, var))
+                sol.append(select(current_clauses))
         else :
+            prev_clauses = clauses
             v = sol.pop()
             while (len(sol) > 0) and (v[2] is None):
                 v = sol.pop()
@@ -65,19 +103,26 @@ def pretty_sol(sol:list):
     return list(map((lambda x: x[0]*x[1]), sol))
 
 if __name__ == "__main__":
-    #var,clauses = utils.read_file("prob/uf20-01.cnf")
-    #var = {1, 2, 3}
-    #clauses = [[1, -2, 3], [2], [-3]]
-    #sol = [(1, 1, -1), (2, 1, -1), (3, 1, -1)]
+    test = lambda given, expected: "OK "+str(given) if given == expected else "KO : got "+str(given)+" expected "+str(expected)
     clauses = [[1, -2, -3, 4], [-1, -3, 4], [3, 4], [-4]]
     var = {1, 2, 3, 4}
-    sol = [(1, 1, -1), (2, -1, -1), (3, 1, -1), (4, -1, None)]
-    #print(check_consistency(sol, clauses))
-    #print(select(sol, clauses, var))
-    print(pretty_sol(backtrack(var,clauses))) #[(1, -1, None), (2, -1, None), (3, 1, -1), (4, -1, None)]
-
+    sol = backtrack(var,clauses)
+    print(test(old_check_consistency(sol, clauses) and (apply_sol(sol, clauses) == []), True))
+    
     clauses = [[1, -2, -3, 4], [-1, -3, 4], [3, 4], [-4], [1,2]]
-    print(pretty_sol(backtrack(var,clauses))) #[]
+    print(test( pretty_sol(backtrack(var,clauses)) , [] )) #[]
 
-    #print(check_consistency([(1,1,-1)], [[-1]])) #False
-    #print(check_consistency([(1,1,-1)], [[-1, 2]])) #True
+    print(test(check_consistency([(1,1,-1)], [[-1]]) , False)) #False
+    print(test(check_consistency([(1,1,-1)], [[-1, 2]]) , True)) #True
+
+    print(test(apply_sol([(1,1,0)], clauses), [[-3, 4], [3, 4], [-4]] ))
+    print(test(apply_sol([(4,1,0)], clauses), [False, [1, 2]]))
+
+    var,clauses = utils.read_file("prob/uf20-01.cnf")
+    sol = backtrack(var,clauses)
+    print(test(old_check_consistency(sol, clauses) and (apply_sol(sol, clauses) == []), True))
+
+    var,clauses = utils.read_file("prob/uf50-01.cnf")
+    sol = backtrack(var,clauses)
+    print(test(old_check_consistency(sol, clauses) and (apply_sol(sol, clauses) == []), True))
+    
