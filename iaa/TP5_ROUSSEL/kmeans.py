@@ -20,13 +20,18 @@ class KMeans(object):
         self.cluster_centers = None             # Coordonnées des centres de regroupement
                                                 # (centre de gravité des classes)
 
-    def _compute_distance(self, vec1:np.ndarray, vec2:np.ndarray) -> float:
+    def _compute_distance(self, vec1:np.ndarray, vec2:np.ndarray) -> np.ndarray:
         """Retourne la distance quadratique entre vec1 et vec2 (squared euclidian distance)
         """
-        assert len(vec1) == len(vec2), "Vectors must be same dimension"
         return sum((vec1-vec2)**2)
-        #return sum(abs(vec1-vec2))
-        #return max(abs(vec1-vec2))
+
+    def _distance_vec(self, vec1, vec2):
+        """Retourne une matrice qui donne pour chaque point de vec1 la distance aux points de vec2
+        """
+        d = [None]*(len(vec2))
+        for i in range(len(vec2)):
+            d[i] = np.sum((vec1-vec2[i])**2, 1)
+        return np.array(d).T
 
 
     def _compute_inertia(self, X:np.ndarray, y:np.ndarray) -> float:
@@ -34,9 +39,9 @@ class KMeans(object):
         cluster associe
         """
         inertia = 0
+        d = self._distance_vec(X, self.cluster_centers)
         for i in range(len(X)):
-            center = self.cluster_centers[y[i]]
-            inertia += self._compute_distance(X[i], center)
+            inertia += d[i, y[i]]
         return inertia
 
 
@@ -57,15 +62,8 @@ class KMeans(object):
         X = données
         y = cluster associé à chaque donnée
         """
-        # nombre d'échantillons
-        n_data = X.shape[0]
-        y = np.zeros(n_data, dtype=int)
-        for i in range(n_data):
-            y[i] = np.argmax(list(map(lambda c : -self._compute_distance(X[i], self.cluster_centers[c]), range(self.n_clusters))))
-            #for c in range(0, self.n_clusters):
-            #    if self._compute_distance(X[i], self.cluster_centers[c]) <= self._compute_distance(X[i], self.cluster_centers[y[i]]) :
-                    #print(self._compute_distance(X[i], self.cluster_centers[c]) ," <= ", self._compute_distance(X[i], self.cluster_centers[y[i]]))
-            #        y[i] = c
+        d = self._distance_vec(X, self.cluster_centers)
+        y = list(map(np.argmax, -d))
         return y
 
     def fit(self, X:np.ndarray) -> None:

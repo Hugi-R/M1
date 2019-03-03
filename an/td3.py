@@ -14,3 +14,13 @@ def spectrogram (X, taille_f):
 E = lambda t, f : sum(list(map(lambda x : x*x, t)))/f
 X = np.array([1,2,3,4,5,6,7,8,9,10])
 print(spectrogram(X, 5))
+
+
+def amdf(sig, tau):
+    f = 0
+    for i in range(len(sig)-tau):
+        f += abs(sig[i]-sig[i+tau]
+    return f
+
+def ff_amdf(sig):
+    argmin(amdf, tau)
