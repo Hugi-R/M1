@@ -22,7 +22,7 @@ to setup-sheeps
   create-sheep initial-number-sheep
   [
     set shape "sheep"
-    set color white
+    set color random-white
     set size 1.5
     set energy random (2 * sheep-gain-from-food)
     setxy random-xcor random-ycor
@@ -162,7 +162,6 @@ to death
   if energy < 0
     [die]
 end
-
 
 
 
@@ -752,7 +751,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.0.2
+NetLogo 6.0.4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@

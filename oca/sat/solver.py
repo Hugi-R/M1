@@ -1,3 +1,4 @@
+import time
 import types
 import itertools
 import numpy as np
@@ -5,21 +6,54 @@ import utils
 
 sign = lambda x: -1 if x < 0 else 1
 
-def pass_one(solution:list, literal):
-    for v in solution:
-        if v[0]*v[1] == literal:
+def pass_one(pretty_solutions:list, literal):
+    if literal in pretty_solutions :
+        return True
+    elif -literal in pretty_solutions:
+        return False
+    return literal
+
+def pass_one_v0(pretty_solutions:list, literal):
+    for s in pretty_solutions:
+        if s == literal:
             return True
-        elif v[0]*v[1] == -literal:
+        elif s == -literal:
             return False
     return literal
 
-def apply_sol(solution:list, clauses:list):
+def pass_two(clause:list):
+    c = []
+    for l in clause:
+        if type(l) == bool :
+            if l :
+                return []
+        else:
+            c.append(l)
+    if c == []:
+        return False
+    return c
+
+def apply_sol_v0(solution:list, clauses:list):
+    sol = pretty_sol(solution)
+    tmp = lambda c: map(lambda l: pass_one(sol, l), c)
+    cs2 = map(tmp, clauses)
+    cs3 = []
+    for c in cs2:
+        c2 = pass_two(c)
+        if c2 != []:
+            cs3.append(c2)
+        if c2 == False:
+            break # bad solution, no need to finish
+    return cs3
+
+def apply_sol_v1(solution:list, clauses:list):
+    sol = pretty_sol(solution)
     cs2 = []
     for c in clauses:
         c2 = []
         valid = False
         for l in c:
-            po = pass_one(solution, l)
+            po = pass_one(sol, l)
             if type(po) == bool :
                 if po :
                     valid = True
@@ -28,8 +62,11 @@ def apply_sol(solution:list, clauses:list):
                 c2.append(po)
         if not valid :
             cs2.append(c2 if c2 != [] else False)
+            if c2 == []:
+                break # bad solution, no need to finish
     return cs2
-    
+
+apply_sol = apply_sol_v1
 
 def sol_invalid_literal(solution:list, literal):
     for v in solution:
@@ -64,38 +101,58 @@ def select(current_clauses:list):
     if unit :
         return (sign(unit[0][0])*unit[0][0], sign(unit[0][0]), None)
 
-    fast_var = np.unique(list(itertools.chain.from_iterable(current_clauses)))
+    flat_clauses = np.array(list(itertools.chain.from_iterable(current_clauses)))
+    fast_var = np.unique(flat_clauses)
 
     t = lambda x: not -x in fast_var
     pure = list(filter(t, fast_var))
     if pure :
         return (sign(pure[0])*pure[0], sign(pure[0]), None)
 
-    return (sign(fast_var[0])*fast_var[0], 1, -1)
+    unsign = flat_clauses*np.sign(flat_clauses)
+    count = dict.fromkeys(np.unique(unsign), 0)
+    #print(count)
+    maxi = unsign[0]
+    for v in unsign:
+        count[v] += 1
+        if count[v] > count[maxi]:
+            maxi = v
+    return (v, 1, -1)
+    #return (sign(fast_var[0])*fast_var[0], 1, -1)
 
 def backtrack(var:list, clauses:list):
     nb_var = len(var)
     finished = False
     sol = []
-    prev_clauses = clauses
+    #prev_clauses = clauses
+    prev_clauses = [clauses]
     m = 0
+    bt_cpt = 0
     while not finished:
-        current_clauses = apply_sol(sol, prev_clauses)
+        #if len(sol) > m:
+        #    m = len(sol)
+        #    print("Max sol len : ",m)
+        current_clauses = apply_sol(sol, prev_clauses[-1])
+        prev_clauses.append(current_clauses)
         if all(current_clauses): #check consistency
-            prev_clauses = current_clauses
+            #prev_clauses = current_clauses
             if current_clauses == [] :
                 finished = True
             else:
                 sol.append(select(current_clauses))
         else :
-            prev_clauses = clauses
+            bt_cpt += 1
+            #prev_clauses = clauses
+            prev_clauses.pop()
             v = sol.pop()
             while (len(sol) > 0) and (v[2] is None):
+                prev_clauses.pop()
                 v = sol.pop()
             if not v[2] is None:
                 sol.append((v[0],v[2],None))
             else:
                 return []
+            print("bt cpt : ", bt_cpt, ". new level : ", len(sol))
     return sol
 
 
@@ -116,13 +173,15 @@ if __name__ == "__main__":
     print(test(check_consistency([(1,1,-1)], [[-1, 2]]) , True)) #True
 
     print(test(apply_sol([(1,1,0)], clauses), [[-3, 4], [3, 4], [-4]] ))
-    print(test(apply_sol([(4,1,0)], clauses), [False, [1, 2]]))
+    print(test(apply_sol([(4,1,0)], clauses), [False]))
 
     var,clauses = utils.read_file("prob/uf20-01.cnf")
+    start = time.perf_counter()
     sol = backtrack(var,clauses)
-    print(test(old_check_consistency(sol, clauses) and (apply_sol(sol, clauses) == []), True))
+    print(test(old_check_consistency(sol, clauses) and (apply_sol(sol, clauses) == []), True), " t=",time.perf_counter()-start) #slowest : 0.012; 0.041; 0.019
 
     var,clauses = utils.read_file("prob/uf50-01.cnf")
+    start = time.perf_counter()
     sol = backtrack(var,clauses)
-    print(test(old_check_consistency(sol, clauses) and (apply_sol(sol, clauses) == []), True))
+    print(test(old_check_consistency(sol, clauses) and (apply_sol(sol, clauses) == []), True), " t=",time.perf_counter()-start) #slowest : 20.40; 0.544; 0.211
     
