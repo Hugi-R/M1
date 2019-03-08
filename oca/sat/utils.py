@@ -1,3 +1,5 @@
+# ROUSSEL Hugo
+
 import re
 
 def read_file (path):
@@ -31,7 +33,29 @@ def read_file (path):
         assert len(var_set) == nb_var
         assert len(clause_list) == nb_clause
         return var_set,clause_list
-            
+
+def read_graph(path:str):
+    nb_arcs = 0
+    graph = []
+    with open(path, "r") as f:   
+        for line in f:
+            line = line.strip()
+            line = re.sub(' +', ' ',line)
+            if line[0] == "c":
+                pass
+            elif line[0] == "p":
+                s = line.split(" ")
+                nb_arcs = int(s[3])
+            elif line[0] == "%":
+                break
+            elif line[0] == "e":
+                s = line.split(" ")
+                graph.append((int(s[1]), int(s[2])))
+            else:
+                raise Exception("Unexpected expression : %s" % line)
+        assert len(graph) == nb_arcs
+        return graph
         
 if __name__ == "__main__":
     print(read_file("prob/uf20-01.cnf"))
+    print(read_graph("prob/flat20_3_0.col"))
