@@ -8,14 +8,14 @@ import solver
 import coloration
 
 help_str = """
-%s file [k] [-t:(cnf|col)] [-s|-v] [-o:file]
+%s file [k] [-t:(cnf|col)] [-s|-v] [-o:[file]]
 Solve a SAT problem. By default display a human readable solution. Use -s if you want the same output as an output file.
 file : path to the problem to solve.
  k   : only relevant if k-coloring problem. Number of color.
 -t   : optionnal, force the type of the file.
 -s   : optionnal, silent. Only print the solution.
 -v   : optionnal, verbose. Print progress update, usefull for large problem (>100 variables).
--o   : optionnal, print the formated solution to a file. Does not impact terminal display.
+-o   : optionnal, print the formated solution to a file. Does not impact terminal display. If no argument are given, use the same filename as the input, with a .sol extension.
 """
 
 if __name__ == "__main__":
@@ -43,7 +43,11 @@ if __name__ == "__main__":
                 print("Bad type provided for -t. Options are 'cnf' or 'col'.")
                 exit(0)
         elif opt == "-o":
-            output_file = open(arg[1:], "w")
+            if arg != ":" :
+                output_file = open(arg[1:], "w")
+            else:
+                name = argv[1][:-3]+"sol"
+                output_file = open(name, "w")
 
         else:
             print("Unknow option '%s'."%opt)

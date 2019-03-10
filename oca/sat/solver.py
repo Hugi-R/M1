@@ -37,6 +37,7 @@ def pass_two(clause:list):
     return c
 
 """
+# A parrallel apply_sol using pymp, not effective
 def apply_sol_pymp(solution:list, clauses:list):
     sol = pretty_sol(solution)
 
@@ -123,18 +124,19 @@ def check_consistency(solution:list, clauses:list):
 
 
 def select(current_clauses:list):
+    """
     unit = list(filter(lambda x: len(x) == 1 if type(x) == list else False, current_clauses))
     if unit :
         return (sign(unit[0][0])*unit[0][0], sign(unit[0][0]), None)
-
+    """
     flat_clauses = list(itertools.chain.from_iterable(current_clauses))
     fast_var = set(flat_clauses)
-
+    """
     t = lambda x: not -x in fast_var
     pure = list(filter(t, fast_var))
     if pure :
         return (sign(pure[0])*pure[0], sign(pure[0]), None)
-
+    
     count = dict.fromkeys(fast_var, 0)
     maxi = flat_clauses[0]
     for v in flat_clauses:
@@ -142,6 +144,10 @@ def select(current_clauses:list):
         if count[v] > count[maxi]:
             maxi = v
     return (sign(v)*v, sign(v), -sign(v))
+    """
+    v = next(iter(fast_var))
+    return (sign(v)*v, sign(v), -sign(v))
+    
 
 def backtrack(var:list, clauses:list, log=False):
     finished = False
