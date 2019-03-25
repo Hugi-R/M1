@@ -72,4 +72,73 @@ F0 = fs/T0
 #3
 canaux(spectre, fs, 24);
 
+#4
+function res = energie(signal, taille_f)
+  # Calcul d'énergie d'un signal avec une fenetre glissante de taille taille_f
+  y = [];
+  for i = 1:floor((taille_f/2)):length(signal)-taille_f+1
+    f = signal(i:i+taille_f-1);
+    y = [y; sum(f.^2)/length(f)];
+  end
+  res = y;
+endfunction
+
+function plot_energie_ms(signal, fs, t_ms)
+  taille_f = floor(fs*(t_ms/1000));
+  t = (0:taille_f:length(signal)-(1*taille_f+1))/fs;
+  e = energie(signal, taille_f*2);
+  plot(t, e);
+endfunction
+
+figure;
+subplot(2,1,1);
+t = (0:length(signal)-1)/fs;
+plot(t, signal);
+legend("Signal");
+ylabel("Amplitude");
+xlabel("Temps (s)");
+subplot(2,1,2)
+plot_energie_ms(signal, fs, 10)
+#On remarque des piques sur les zones parlées
+
+#5
+function res = zcr(signal)
+  y = 0;
+  for i = 2:length(signal)
+    if sign(signal(i-1)) != sign(signal(i))
+      y = y + 1;
+    end
+  end
+  res = y/length(signal);
+endfunction
+
+function res = zcr_glissant(signal, taille_f, recouvrement)
+  # Calcul du zcr d'un signal avec une fenetre glissante de taille taille_f
+  # avec le recouvrement recouvrement.
+  y = [];
+  for i = 1:floor((taille_f-recouvrement)):length(signal)-taille_f+1
+    f = signal(i:i+taille_f-1);
+    y = [y; zcr(f)];
+  end
+  res = y;
+endfunction
+
+function plot_zcr_ms(signal, fs, t_ms)
+  taille_f = floor(fs*(t_ms/1000));
+  t = (0:taille_f:length(signal)-(1*taille_f+1))/fs;
+  z = zcr_glissant(signal, taille_f*2, taille_f);
+  plot(t, z); 
+endfunction
+
+figure;
+subplot(2,1,1);
+t = (0:length(signal)-1)/fs;
+plot(t, signal);
+legend("Signal");
+ylabel("Amplitude");
+xlabel("Temps (s)");
+subplot(2,1,2)
+plot_zcr_ms(signal, fs, 10);
+#On remarque les piques dans les zones sans paroles
+#détecter les zones parlés
 

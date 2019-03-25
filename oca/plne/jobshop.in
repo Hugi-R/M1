@@ -1,0 +1,20 @@
+c s machine cost
+c e task machine duration
+s 1 20
+s 2 10 
+s 3 12
+e 4 1 2
+e 4 2 5
+e 4 3 4
+e 5 1 3
+e 5 2 6
+e 5 3 6 
+e 6 1 2
+e 6 2 7
+e 6 3 8
+e 7 1 4
+e 7 2 7
+e 7 3 5
+e 8 1 2
+e 8 2 4
+e 8 3 3

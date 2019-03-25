@@ -43,3 +43,8 @@ endfunction
 
 i = n_bit_fort(img, 2); 
 image(i)
+
+im = imread("2CV.jpg");
+im2 = n_bit_fort(im, 2);
+imwrite(im2, "2CV_2bit.jpg")
+#imshow(im2);
