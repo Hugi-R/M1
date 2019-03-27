@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <math.h>
 #include "limace.h"
 #include "salade.h"
 #include "erreurs.h"
@@ -145,6 +146,35 @@ Matrix MatDot(Matrix MA, Matrix MB){
 	return Mres;
 }
 
+Matrix MatTranspo(Matrix MatA){
+	size_t n = MatNbRow(MatA);
+	size_t m = MatNbCol(MatA);
+	Matrix MatAT = MatAlloc(Double, m, n);
+	double **AT = MatGetDouble(MatAT);
+	double **A = MatGetDouble(MatA);
+	for(size_t i = 0; i < m; ++i){
+		for(size_t j = 0; j < n; ++j){
+			AT[i][j] = A[j][i];
+		}
+	}
+	return MatAT;
+}
+
+void test(){
+	Matrix mA = MatAlloc(Double, 3, 3);
+	double **a = MatGetDouble(mA);
+	for(int i = 0; i < 9; ++i){
+		a[i/3][i%3] = (double)(i+1);
+	}
+	MatWriteAsc(mA, "");
+
+	Matrix mAT = MatTranspo(mA);
+	MatWriteAsc(mAT, "");
+
+	Matrix dot = MatDot(mA, mA);
+	MatWriteAsc(dot, "");
+}
+
 /* Calibrage 3D : estimation au sens des moindres carres totaux de la matrice
  * de projection perspective a partir de correspondances 3D <--> 2D
  */
@@ -160,47 +190,43 @@ Matrix Calibrage(Matrix MatP3, Matrix Matp2)
     
 		Matrix MatA = MatAlloc(Double, n*2, 12);
 		double **A = MatGetDouble(MatA);
-		for(size_t i = 0; i < n; i+=2){
-			A[i][0] = P3[i][0];
-			A[i][1] = P3[i][1];
-			A[i][2] = P3[i][2];
-			A[i][3] = 1;
-			A[i][4] = 0;
-			A[i][5] = 0;
-			A[i][6] = 0;
-			A[i][7] = 0;
-			A[i][8] = -p2[i][0]*P3[i][0];
-			A[i][9] = -p2[i][0]*P3[i][1];
-			A[i][10] = -p2[i][0]*P3[i][2];
-			A[i][11] = -p2[i][0];
+		for(size_t i = 0; i < n; ++i){
+			double u = p2[i][0];
+			A[2*i][0] = P3[i][0];
+			A[2*i][1] = P3[i][1];
+			A[2*i][2] = P3[i][2];
+			A[2*i][3] = 1;
+			A[2*i][4] = 0;
+			A[2*i][5] = 0;
+			A[2*i][6] = 0;
+			A[2*i][7] = 0;
+			A[2*i][8] = -u*P3[i][0];
+			A[2*i][9] = -u*P3[i][1];
+			A[2*i][10] = -u*P3[i][2];
+			A[2*i][11] = -u;
 
-			A[i+1][0] = 0;
-			A[i+1][1] = 0;
-			A[i+1][2] = 0;
-			A[i+1][3] = 0;
-			A[i+1][4] = P3[i][0];
-			A[i+1][5] = P3[i][1];
-			A[i+1][6] = P3[i][2];
-			A[i+1][7] = 1;
-			A[i+1][8] = -p2[i][0]*P3[i][0];
-			A[i+1][9] = -p2[i][0]*P3[i][1];
-			A[i+1][10] = -p2[i][0]*P3[i][2];
-			A[i+1][11] = -p2[i][0];
+			double v = p2[i][1];
+			A[2*i + 1][0] = 0;
+			A[2*i + 1][1] = 0;
+			A[2*i + 1][2] = 0;
+			A[2*i + 1][3] = 0;
+			A[2*i + 1][4] = P3[i][0];
+			A[2*i + 1][5] = P3[i][1];
+			A[2*i + 1][6] = P3[i][2];
+			A[2*i + 1][7] = 1;
+			A[2*i + 1][8] = -v*P3[i][0];
+			A[2*i + 1][9] = -v*P3[i][1];
+			A[2*i + 1][10] = -v*P3[i][2];
+			A[2*i + 1][11] = -v;
 		}
 
-		Matrix MatAT = MatAlloc(Double, 12, n*2);
-		double **AT = MatGetDouble(MatAT);
-		for(size_t i = 0; i < 12; ++i){
-			for(size_t j = 0; j < 2*n; ++j){
-				AT[i][j] = A[j][i];
-			}
-		}
+		Matrix MatAT = MatTranspo(MatA);
 
 		Matrix pVal;
 		Matrix pVec;
 		Matrix dot = MatDot(MatAT, MatA);
 		if(SymEig(dot, &pVal, &pVec) != 0){
-			
+			//error
 		}
 
 		double **val = MatGetDouble(pVal);
@@ -212,16 +238,33 @@ Matrix Calibrage(Matrix MatP3, Matrix Matp2)
 			}
 		}
 
-		printf("min : %lf\n", val[min][0]);
-		MatWriteAsc(pVal, "");
+		Matrix MatM = MatAlloc(Double, 3, 4);
+		double **M = MatGetDouble(MatM);
+		double **pv = MatGetDouble(pVec);
+		for(int i = 0; i < 3*4; ++i){
+				M[i/4][i%4] = pv[i][min];
+		}
+		//MatWriteAsc(pVec,"");
+
+		//printf("min %ld : %lf\n", min, val[min][0]);
+		//MatWriteAsc(MatM,"");
+
+		double norm = sqrt((M[2][0]*M[2][0]) + (M[2][1]*M[2][1]) + (M[2][2]*M[2][2]));
+		double sign = M[2][3] < 0 ? -1.0 : 1.0;
+		//printf("sign=%lf, norm=%.5lf\n", sign, norm);
+		for(int i = 0; i < 3; ++i){
+			for(int j = 0; j < 4; ++j){
+				M[i][j] = sign*M[i][j]/norm;
+			}
+		}
+
+		//MatWriteAsc(MatM,"");
 		
-
-
     MatFree(&dot);
 		MatFree(&pVal);
 		MatFree(&pVec);
 	  MatFree(&MatA);
 		MatFree(&MatAT);
-    return NULL;
+    return MatM;
 }
 

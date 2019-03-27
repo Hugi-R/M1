@@ -1,0 +1,28 @@
+#!/bin/sh
+# reco par viterbi
+# monophones
+
+if [ $# != 3 ] 
+then 
+  echo "usage : $0 <liste de fichiers> <dossier modeles HMM> <dossier Resultats>"
+  echo "ex : $0 Listes/wav.app.lst Modeles/appris/ Resultats/init-AppSurApp-TestSurTst/"
+  exit 1 
+fi 
+
+NomFichierLog=Logs/`basename $0`.`basename $2`.`basename $1`.`date '+%d.%m.%Y-%Hh%M'`.log
+
+if [ ! -d $3 ]
+then
+  mkdir $3
+fi
+
+HParse Modeles/grammaire.txt Modeles/grammaire.htk
+HVite -T 1 \
+      -C Modeles/htk.conf \
+      -A \
+      -w Modeles/grammaire.htk \
+      -d $2 \
+      -l $3 \
+      -S $1 \
+      Modeles/dictionnaire \
+      Modeles/liste-mots 2>&1 | tee $NomFichierLog

@@ -1,0 +1,33 @@
+#!/bin/sh
+# Genere les listes des labels a partir de la liste des fichiers wav
+
+
+if [ $# != 1 ] 
+then
+  echo "usage : $0 <liste de fichiers>" ;
+  echo "ex : $0 Listes/wav.all.lst" ;
+  exit 1
+fi
+
+NomFichierLog=Logs/`basename $0`.`basename $1`.`date '+%d.%m.%Y-%Hh%M'`.log
+
+echo "Creation des labels correspondant a $1" | tee $NomFichierLog
+
+
+for FICHIER in `cat $1`
+do
+   NOMFICHIER=`basename $FICHIER .wav`
+   echo $NOMFICHIER
+   NOM=`echo $NOMFICHIER | cut -d_ -f1 -`
+   echo $NOM
+   DUREE=`soxi -D $FICHIER`
+   echo $DUREE
+   DUREEHTK=`perl -e "print($DUREE * 10000000 - 1,\"\n\");"`
+   echo "$FICHIER -> Labels/${NOMFICHIER}.lab" | tee -a $NomFichierLog
+   echo "0 ${DUREEHTK} $NOM" > Labels/${NOMFICHIER}.lab
+done
+
+
+
+
+

@@ -1,0 +1,52 @@
+#!/bin/sh
+# initialisation des modeles de Markov
+
+if [ $# != 1 ] 
+then
+  echo "usage : $0 <liste de fichiers>" ;
+  echo " ex : $0 Listes/wav.app.lst" ;
+  exit 1
+fi
+
+NomFichierLog=Logs/`basename $0`.`basename $1`.`date '+%d.%m.%Y-%Hh%M'`.log
+
+if [ ! -d Modeles/init ]
+then
+  mkdir Modeles/init
+fi
+
+date | tee -a $NomFichierLog ;
+
+for MODELE in `cat Modeles/liste-mots`
+do
+  if [ -f Modeles/init/$MODELE ]
+  then
+    echo "~~~ modele $MODELE deja initialise ! ~~~" | tee -a $NomFichierLog
+  else
+    echo "~~~~~~~~~~~ modele $MODELE ~~~~~~~~~~~~~" | tee -a $NomFichierLog
+    HInit \
+        -A \
+	-C Modeles/htk.conf \
+        -o Modeles/init/$MODELE \
+        -l $MODELE \
+        -L Labels/ \
+        -i 30 \
+        -T 1 \
+        -m 3 \
+        Modeles/gabarits/$MODELE \
+        -S $1 2>&1 | tee -a $NomFichierLog
+
+    # Nettoyage des noms de modeles
+    if [ -f Modeles/init/$MODELE ]
+    then
+      ed  Modeles/init/$MODELE << EOF
+/~h
+s/^~h.*$/~h "$MODELE"/
+w
+q
+EOF
+    fi 
+  fi
+done
+
+date | tee -a $NomFichierLog ;

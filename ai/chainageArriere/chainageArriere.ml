@@ -1,12 +1,32 @@
 
 let rules = [
-    ("phanerogame",["fleur";"graine"]);
-    ("phanerogame",["fleur";"graine-nue"]);
-    ("sapin",["phanerogame";"graine-nue"]);
-    ("monocotyledone",["phanerogame";"1-cotyledone"])
+    (1,"phanerogame",["fleur";"graine"],0);
+    (2,"sapin",["phanerogame";"graine-nue"],0);
+    (3,"monocotyledone",["phanerogame";"1-cotyledone"],0);
+    (4,"dicotyledone",["phanerogame";"2-cotyledone"],0);
+    (5,"muguet",["monocotyledone";"rhizome"],0);
+    (6,"anemone",["dicotyledone"],0);
+    (7,"lilas",["monocotyledone";"-rhizome"],0);
+    (8,"cryptogame",["feuille";"fleur"],0);
+    (9,"mousse",["cryptogame";"-racine"],0);
+    (10,"fougere",["cryptogame";"racine"],0);
+    (11,"thallophyte",["-feuille";"plante"],0);
+    (12,"algue",["thallophyte";"chlorophylle"],0);
+    (13,"champignon",["thallophyte";"-chlorophylle"],0);
+    (14,"colibacille",["-feuille";"-fleur";"-plante"],0);
 ];;
 
-let string_list l = let rec tmp = fun str l ->
+(************************************************************)
+let string_list
+(************************************************************)
+( l : string list ) (* une liste de string                  *)
+(************************************************************)
+(* retourne un string composé des éléments de la liste      *)
+(* séparés par une virgule                                  *)
+(************************************************************)
+: string
+(************************************************************)
+ = let rec tmp = fun str l ->
                     match l with
                     | s::l -> tmp (str^", "^s) l
                     | [] -> str
@@ -15,56 +35,89 @@ let string_list l = let rec tmp = fun str l ->
                      | [] -> ""
 ;;
 
-let rec print_rules  = function
-                    | [] -> print_string "PR_FIN\n"
-                    | (a,l)::rl -> print_string (a^",["^(string_list l)^"]\n"); print_rules rl
+(************************************************************)
+let str_rule
+(************************************************************)
+(num,a,l,_) (* une règle                                    *)
+(************************************************************)
+(* retourne le string de la règle, de la forme :            *)
+(* Règle <int> : (<liste de string>) -> <string>            *)
+(************************************************************)
+: string
+(************************************************************)
+= ("Règle "^(string_of_int num)^" : ("^(string_list l)^") -> "^a)
 ;;
 
-let facts = ["fleur"; "graine-nue"];;
-
-let rec find_in_rules = fun rules obj ->
-  match rules with
-  | [] -> ([],[])
-  | (o,l)::rl -> if obj = o then (print_rules rl ; (l,rl)) else find_in_rules rl obj
-;;
-
-let rec is_in_facts = fun facts goal ->
-  match facts with
+(************************************************************)
+let rec is_in_facts
+(************************************************************)
+( facts : string list ) (* la liste de fait                 *)
+( goal : string )       (* le but a trouver                 *)
+(************************************************************)
+(* retourne true si le but est dans la liste de fait        *)
+(************************************************************)
+: bool
+(************************************************************)
+= match facts with
   | [] -> false
   | g::f -> if goal = g then true else is_in_facts f goal
 ;;
 
-let demonstrate = fun rules facts goal ->
-  if is_in_facts facts goal then ((true,[]),rules) else ( let (res,rules_left) =  (find_in_rules rules goal) in ((not (res = []),res),rules_left))
+(************************************************************)
+let incRules
+( num : int )                         (* un numero de règle *)
+( rules : (int * string * string list * int) list )
+(* une liste de règle                                       *)
+(************************************************************)
+(* retourne la liste de règle, avec le compteur de la règle *)
+(* num incrémenté                                           *)
+(************************************************************)
+: (int * string * string list * int) list
+(************************************************************)
+= List.map (fun (n,a,r,it) -> if n = num then (n,a,r,it+1) else (n,a,r,it)) rules
 ;;
 
-(*
-let rec chainage_arriere = fun rules facts goals ->
-  match goals with
+(************************************************************)
+let rec chainage_arriere
+(************************************************************)
+( rules : (int * string * string list * int) list )
+                        (* la base de règles                *)
+( facts : string list ) (* la base de faits                 *)
+( goals : string list ) (* une liste de buts                *)
+( indent : string )     (* indentation de l'affichage       *)
+                        (* ("" pour commencer)              *)
+(************************************************************)
+(* inférence par chainage arrière sur les buts goals, avec  *)
+(* comme base de règles rules et comme base de fait facts   *)
+(************************************************************)
+: bool
+(************************************************************)
+= match goals with
   | [] -> true
-  | g::lg -> match demonstrate rules facts g with
-            | (true,[]),rl -> (print_string (g^" OK\n") ; chainage_arriere rules (g::facts) lg)
-            | (true,sg),rl -> (print_string ("New sub goals : "^(string_list sg)^".\n") ; chainage_arriere rules facts sg)
-            | (false,_),[] ->  (print_string (g^" KO2\n") ; false)
-            | (false,_),rl ->  (print_string (g^" KO3\n") ; chainage_arriere rl facts goals)
-;;
- *)
-
-let rec chainage_arriere = fun rules facts goals indent->
-  match goals with
-  | [] -> true
-  | g::lg -> print_string (indent^"On souhaite démontrer "^g^" :\n") ;if is_in_facts facts g then (print_string (indent^g^" démontré, il est présent dans les faits.\n");chainage_arriere rules facts lg indent) else
-     if demBut rules facts g indent
-     then (print_string (indent^g^" démontré.\n"^indent^"Il a été ajouté à la base de faits.\n") ;chainage_arriere rules (g::facts) lg indent)
-     else (print_string (indent^g^" n'a pas pu être démontré.\n") ; false)
+  | g::lg -> print_string (indent^"On souhaite démontrer "^g^" :\n") ;
+    if is_in_facts facts g
+    then (print_string (indent^g^" démontré, il est présent dans les faits.\n");chainage_arriere rules facts lg indent)
+    else
+      if demBut rules facts g indent
+      then (print_string (indent^g^" démontré.\n"^indent^"Il a été ajouté à la base de faits.\n") ;chainage_arriere rules (g::facts) lg indent)
+      else (print_string (indent^g^" n'a pas pu être démontré.\n") ; false)
 and demBut = fun rules facts goal indent ->
     let rec tmp = function
       | [] -> false
-      | (a,l)::lr -> if a = goal
-                     then (print_string (indent^"  On utilise la règle ("^(string_list l)^") -> "^a^".\n"^indent^"Nouveaux sous buts : "^(string_list l)^".\n"); if (chainage_arriere rules facts l ("  "^indent)) then true else (print_string (indent^"Bactrack...\n"^indent^"On continue d'essayer de démontrer "^goal^" :\n");tmp lr)) else tmp lr
+      | (num,a,l,it)::lr ->
+        if it > 5
+        then ((print_string (indent^"Trop d'iteration (>10) sur la règle "^(str_rule (num,a,l,it))^".\n"^indent^"Bactrack...\n"^indent^"On continue d'essayer de démontrer "^goal^" :\n"));tmp lr)
+        else if a = goal
+            then (print_string (indent^"On utilise la "^(str_rule (num,a,l,it))^".\n"^indent^"Nouveaux sous buts : "^(string_list l)^".\n");
+                if (chainage_arriere (incRules num rules) facts l ("  "^indent))
+                then true
+                else (print_string (indent^"Bactrack...\n"^indent^"On continue d'essayer de démontrer "^goal^" :\n");tmp lr))
+            else tmp lr
     in tmp rules
 ;;
 
+
+let facts = ["fleur"; "graine-nue"; "graine"];;
 
 let goals = ["sapin"];;
 

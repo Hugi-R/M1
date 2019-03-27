@@ -1,0 +1,46 @@
+#!/bin/sh
+# Re-estimation des modeles de Markov en utilisant Baum-Welch
+
+if [ $# != 1 ] 
+then
+  echo "usage : $0 <liste de fichiers>" ;
+  echo " ex : $0 Listes/wav.app.lst"
+  exit 1
+fi
+
+NomFichierLog=Logs/`basename $0`.`date '+%d.%m.%Y-%Hh%M'`.log
+
+date > $NomFichierLog
+echo $HOST >> $NomFichierLog
+ORIG=Modeles/init/
+DEST=Modeles/appris/
+
+if [ ! -d $DEST ]
+then
+  mkdir $DEST
+fi
+
+for MODELE in cinq `cat Modeles/liste-mots`
+do
+  if [ -f $DEST/$MODELE ]
+  then
+    echo "~~~ modele $MODELE deja calcule ! ~~~" | tee -a $NomFichierLog  
+  else
+    echo "~~~~~~~~~~~ modele $MODELE ~~~~~~~~~~" | tee -a $NomFichierLog
+    HRest  \
+        -A \
+	-C Modeles/htk.conf \
+        -l $MODELE \
+        -L Labels/ \
+        -M $DEST \
+        -e 0.005 \
+        -i 90 \
+        -T 1 \
+        -m 3 \
+        $ORIG/$MODELE \
+        -S $1 2>&1 | tee -a $NomFichierLog
+  fi
+done
+
+date >> $NomFichierLog
+

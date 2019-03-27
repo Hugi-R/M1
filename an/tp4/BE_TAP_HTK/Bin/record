@@ -1,0 +1,26 @@
+#!/bin/sh
+# Generation de nouveaux enregistrements de fichier Wave pour les mots cibles
+
+
+if [ $# != 3 ] 
+then
+  echo "usage : $0 <liste de mots cibles> <nombre occurences> <vos initiales>" ;
+  echo "ex : $0 Listes/mots.lst 10 JP" ;
+  exit 1
+fi
+
+NomFichierLog=Logs/`basename $0`.`basename $1`.`date '+%d.%m.%Y-%Hh%M'`.log
+
+echo "Creation de $2 enregistrements pour chaque mot du fichier $1" | tee $NomFichierLog
+
+for MOT in `cat $1`
+do
+   CPT=1
+   echo "Dire le mot $MOT"
+   while [ $CPT -le $2 ]
+   do
+      echo "Enregistrement de $MOT $CPT --> parler dans le micro"
+      Bin/adinrec -lv 6000 Signaux/${MOT}_$3_${CPT}.wav
+      let $[ CPT+=1 ]
+   done
+done

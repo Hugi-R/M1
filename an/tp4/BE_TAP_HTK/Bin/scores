@@ -1,0 +1,15 @@
+#!/bin/sh
+
+if [ $# != 1 ]
+then
+  echo "usage : $0 <dossier resulats a tester>"
+  echo " ex : $0 Resultats/init-AppSurApp-TestSurApp/"
+  exit 1
+fi
+
+REP=`dirname $1`
+CORPUS=`basename $REP`
+
+NomFichierLog=Logs/`basename $0`.$CORPUS.`basename $1`.`date '+%d.%m.%Y-%Hh%M'`.log
+
+HResults -t -L Labels/ -p Modeles/liste-mots $1*.rec 2>&1 | tee -a $NomFichierLog
