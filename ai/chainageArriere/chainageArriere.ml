@@ -105,7 +105,7 @@ and demBut = fun rules facts goal indent ->
     let rec tmp = function
       | [] -> false
       | (num,a,l,it)::lr ->
-        if it > 5
+        if it > 2 (* nombre de bouclage autorisé, 2 pour éviter un pavé de texte *)
         then ((print_string (indent^"Trop d'iteration (>10) sur la règle "^(str_rule (num,a,l,it))^".\n"^indent^"Bactrack...\n"^indent^"On continue d'essayer de démontrer "^goal^" :\n"));tmp lr)
         else if a = goal
             then (print_string (indent^"On utilise la "^(str_rule (num,a,l,it))^".\n"^indent^"Nouveaux sous buts : "^(string_list l)^".\n");
@@ -116,9 +116,3 @@ and demBut = fun rules facts goal indent ->
     in tmp rules
 ;;
 
-
-let facts = ["fleur"; "graine-nue"; "graine"];;
-
-let goals = ["sapin"];;
-
-chainage_arriere rules facts goals "";;

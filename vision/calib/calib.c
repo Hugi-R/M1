@@ -228,7 +228,7 @@ Matrix Calibrage(Matrix MatP3, Matrix Matp2)
 		if(SymEig(dot, &pVal, &pVec) != 0){
 			//error
 		}
-
+		
 		double **val = MatGetDouble(pVal);
 		size_t m = MatNbRow(pVal);
 		size_t min = 0;
@@ -247,6 +247,7 @@ Matrix Calibrage(Matrix MatP3, Matrix Matp2)
 		//MatWriteAsc(pVec,"");
 
 		//printf("min %ld : %lf\n", min, val[min][0]);
+		//MatWriteAsc(pVal, "");
 		//MatWriteAsc(MatM,"");
 
 		double norm = sqrt((M[2][0]*M[2][0]) + (M[2][1]*M[2][1]) + (M[2][2]*M[2][2]));

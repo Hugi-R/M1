@@ -18,3 +18,16 @@ imagesc(log(abs(fftshift(Ideal))))
 imagesc(log(abs(fftshift(H))))
 imagesc(log(abs(fftshift(I))))
 
+Id = I/H;
+imagesc(abs(ifft(Id)))
+# H possède des valeurs très proche de 0
+
+Id = I;
+for i = 1:length(Id)
+  if H(i) > 0.1
+    Id(i) = Id(i)/H(i);
+  endif
+endfor
+imagesc(abs(ifft(Id)))
+
+# deconvwnr not yet implemented in octave
